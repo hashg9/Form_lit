@@ -9,6 +9,7 @@ export class Empform extends LitElement {
       department: { type: String },
       designation: { type: String },
       state: { type: String },
+      data:{ type: Object }
     };
   }
 
@@ -286,32 +287,31 @@ export class Empform extends LitElement {
   }
 
   _submit(e) {
-    alert("form submitted");
-    // if (
-    //     this.empForm.name.isValidName === true &&
-    //     this.empForm.empCode.isValidName === true &&
-    //     this.empForm.email.isValidName === true &&
-    //     this.empForm.per_email.isValidName === true &&
-    //     this.employee.phone.isValidName ===true &&
-    //     this.employee.sec_phone.isValidName ==true &&
-    //     this.employee.line1.isValidName === true &&
-    //     this.employee.line2.isValidName === true &&
-    //     this.employee.city.isValidName === true &&
-    //     this.employee.landmark.isValidName === true &&
-    //     this.employee.country.isValidName === true &&
-    //     this.employee.pincode.isValidName === true &&
-    //     this.employee.department.isValidName === true &&
-    //     this.employee.designation.isValidName === true &&
-    //     this.employee.state.isValidName === true
+    
+    if (
+        this.employee.name.isValidName === true &&
+        this.employee.emp_code.isValidName === true &&
+        this.employee.email.isValidName === true &&
+        this.employee.per_email.isValidName === true &&
+        this.employee.phone.isValidName ===true &&
+        this.employee.sec_phone.isValidName ==true &&
+        this.employee.line1.isValidName === true &&
+        this.employee.line2.isValidName === true &&
+        this.employee.city.isValidName === true &&
+        this.employee.landmark.isValidName === true &&
+        this.employee.country.isValidName === true &&
+        this.employee.pincode.isValidName === true &&
+        this.employee.department.isValidName === true &&
+        this.employee.designation.isValidName === true &&
+        this.employee.state.isValidName === true
 
-    //   ) {
-    //     const form = this.renderRoot.querySelector("form");
-    //     localStorage.setItem("Form_Data", this.empForm);
-    //     form.reset();
-    //     console.log("Form sucess");
-    //     console.log(Form_Data);
-    //     alert("Form Submitted Successfully");
-    //   }
+      ) {
+        
+        localStorage.setItem("Form_Data", this.employee);
+        // form.reset();
+      
+        alert("Form Submitted Successfully");
+       }
   }
 
   validate(e, input_type) {
