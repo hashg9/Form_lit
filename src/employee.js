@@ -9,9 +9,9 @@ export class Empform extends LitElement {
       department: { type: String },
       designation: { type: String },
       state: { type: String },
-      data:{ type: Object },
-      full_data :{type:Array },
-      olddata:{type: Array}
+      data: { type: Object },
+      olddata: { type: Array },
+      format: { type: Array },
     };
   }
 
@@ -35,9 +35,7 @@ export class Empform extends LitElement {
       per_email: { value: "", isValidName: false, errorMessage: "" },
     };
 
-    this.full_data =[];
-
-    
+    this.format = [];
   }
 
   render() {
@@ -89,7 +87,11 @@ export class Empform extends LitElement {
         <div class="input_field" id="department">
         <label class="inp_lable">Department:</label>
           
-            <input list="dep_ch" placeholder="Choose Department" name="myBrowser" @input=${(e)=>{this.validate(e,"department")}}/>
+            <input list="dep_ch" placeholder="Choose Department" name="myBrowser" @input=${(
+              e
+            ) => {
+              this.validate(e, "department");
+            }}/>
             <datalist id="dep_ch">
             ${repeat(
               department,
@@ -106,7 +108,11 @@ export class Empform extends LitElement {
       <label class="inp_lable">Designation:</label>
 
       
-            <input list="des_ch"  placeholder="Choose Designation" @input=${(e)=>{this.validate(e,"designation")}}/>
+            <input list="des_ch"  placeholder="Choose Designation" @input=${(
+              e
+            ) => {
+              this.validate(e, "designation");
+            }}/>
             <datalist id="des_ch">
             ${repeat(
               designation,
@@ -174,8 +180,10 @@ export class Empform extends LitElement {
             <div class="input_add"  id="state">
                 <label for="state">State:</label>
                
-                <input list="state_ch"  placeholder="Choose State" @input=${(e)=>{
-                  this.validate(e,"state")
+                <input list="state_ch"  placeholder="Choose State" @input=${(
+                  e
+                ) => {
+                  this.validate(e, "state");
                 }}/>
             <datalist id="state_ch">
             ${repeat(
@@ -189,7 +197,11 @@ export class Empform extends LitElement {
 
             <div class="input_add" id="country">
                 <label for="country">Country:</label>
-                <input list="country_ch"  placeholder="Choose State" @input=${(e)=>{this.validate(e,"ountry")}} />
+                <input list="country_ch"  placeholder="Choose State" @input=${(
+                  e
+                ) => {
+                  this.validate(e, "ountry");
+                }} />
             <datalist id="country_ch">
             ${repeat(
               country,
@@ -203,7 +215,7 @@ export class Empform extends LitElement {
             <div class="input_add" id="pin" >
                 <label for="pincode">Pincode:</label>
                 <input type="text" name="pincode" @input=${(e) => {
-                  this.validate(e, "pin")
+                  this.validate(e, "pin");
                 }}>
                 <span>${this.employee.pincode?.errorMessage}</span>
             <div>
@@ -223,18 +235,16 @@ export class Empform extends LitElement {
   }
   static get styles() {
     return css`
+      span {
+        color: red;
+      }
+      #line_2 {
+        margin-top: 1rem;
+      }
+      #city {
+        margin-top: 1rem;
+      }
 
-      span{
-        color:red;
-      }
-      #line_2{
-        margin-top:1rem;
-        
-      }
-      #city{
-        margin-top:1rem;
-      }
-       
       .container {
         border: 2px solid black;
         border-radius: 10px;
@@ -256,87 +266,89 @@ export class Empform extends LitElement {
           width: 100%;
         }
 
-        .input_field:hover{
-            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-            border-radius:3px;
-            padding:3px;
+        .input_field:hover {
+          box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+          border-radius: 3px;
+          padding: 3px;
         }
-        .input_add{
-            margin-bottom:1rem;
+        .input_add {
+          margin-bottom: 1rem;
         }
-        .btn{
-            margin-top:2rem;
-            display:flex;
-            justify-content:center;
-            
-
+        .btn {
+          margin-top: 2rem;
+          display: flex;
+          justify-content: center;
         }
-        #sub_btn{
-            padding:4px 15px;
-            font-size:large;
-            font-weight:550;
-            background:black;
-            color:white;
-            border-radius:7px;
-
+        #sub_btn {
+          padding: 4px 15px;
+          font-size: large;
+          font-weight: 550;
+          background: black;
+          color: white;
+          border-radius: 7px;
         }
-        #sub_btn:hover{
-            background:white;
-            color:black;
+        #sub_btn:hover {
+          background: white;
+          color: black;
         }
-        
-
-        
-    }
-        
-      
-      
+      }
     `;
   }
 
   _submit(e) {
-    
+    e.preventDefault()
     if (
-        this.employee.name.isValidName === true 
-        // this.employee.emp_code.isValidName === true &&
-        // this.employee.email.isValidName === true &&
-        // this.employee.per_email.isValidName ===true &&
-        // this.employee.department.isValidName ===true  &&
-        // this.employee.designation.isValidName === true &&
-        // this.employee.phone.isValidName === true &&
-        // this.employee.line1.isValidName === true &&
-        // this.employee.line2.isValidName === true &&
-        // this.employee.city.isValidName === true &&
-        // this.employee.landmark.isValidName === true &&
-        // this.employee.state.isValidName === true &&
-        // this.employee.country.isValidName === true &&
-        // this.employee.pincode.isValidName === true 
-        
-       
+      this.employee.name.isValidName === true &&
+      this.employee.emp_code.isValidName === true &&
+      this.employee.email.isValidName === true &&
+      this.employee.per_email.isValidName ===true &&
+      this.employee.department.isValidName ===true  &&
+      this.employee.designation.isValidName === true &&
+      this.employee.phone.isValidName === true &&
+      this.employee.line1.isValidName === true &&
+      this.employee.line2.isValidName === true &&
+      this.employee.city.isValidName === true &&
+      this.employee.landmark.isValidName === true &&
+      this.employee.state.isValidName === true &&
+      this.employee.country.isValidName === true &&
+      this.employee.pincode.isValidName === true
+    ) {
 
-      ) {
-        
-        
-        
-       let olddata=  JSON.parse(localStorage.getItem("Form_Data"));
-       this.full_data.push(olddata);
-       this.full_data.push(this.employee);
+      let data = {
+        Name: this.employee.name.value,
+        Emp_code: this.employee.emp_code.value,
+        Email: this.employee.email.value,
+        Per_email: this.employee.per_email.value,
+        Department: this.employee.department.value,
+        Designation: this.employee.designation.value,
+        Phone: this.employee.phone.value,
+        Sec_phone: this.employee.sec_phone.value,
+        Add_line1: this.employee.line1.value,
+        Add_line2: this.employee.line2.value,
+        City: this.employee.city.value,
+        Landmark: this.employee.landmark.value,
+        State: this.employee.state.value,
+        Country: this.employee.country.value,
+        Pincode: this.employee.pincode.value,
+      };
 
-       
+      //  localStorage.clear("Form_Data");
+      // let olddata = JSON.parse(localStorage.getItem("Form_Data"));
+      // this.full_data.push(olddata);
+      this.format.push(data);
 
-        localStorage.setItem("Form_Data", JSON.stringify(this.full_data) );
-        
-
-        
-      
-        alert("Form Submitted Successfully");
-       }
+      localStorage.setItem("Form_Data", JSON.stringify(this.format) );
+      // let data=JSON.parse(localStorage.getItem("Form_Data"));
+      // console.log(data);
+      const form =this.renderRoot.querySelector("form")
+      form.reset();
+      alert("Form Submitted Successfully");
+    }
   }
 
   validate(e, input_type) {
     switch (input_type) {
-
-      case "state":{
+      case "state": {
         this.employee = {
           ...this.employee,
           state: {
@@ -344,8 +356,8 @@ export class Empform extends LitElement {
             isValidName: false,
             errorMessage: "",
           },
-        }
-        if(this.employee.state.value== ""){
+        };
+        if (this.employee.state.value == "") {
           this.employee = {
             ...this.employee,
             state: {
@@ -353,9 +365,8 @@ export class Empform extends LitElement {
               isValidName: false,
               errorMessage: "*Choose State",
             },
-          }
-  
-        }else{
+          };
+        } else {
           this.employee = {
             ...this.employee,
             state: {
@@ -363,101 +374,102 @@ export class Empform extends LitElement {
               isValidName: true,
               errorMessage: "",
             },
-          }
-  
+          };
         }
-
-
       }
 
-      case "line2":{
-        this.employee = {
-          ...this.employee,
-          line2: {
-            value: `${e.target.value}`,
-            isValidName: true,
-            errorMessage: "",
-          },
+      case "line2":
+        {
+          this.employee = {
+            ...this.employee,
+            line2: {
+              value: `${e.target.value}`,
+              isValidName: true,
+              errorMessage: "",
+            },
+          };
         }
+        break;
 
-      }break;
-
-      case "department":{
-        console.log("in dep");
-        this.employee = {
-          ...this.employee,
-          department: {
-            value: `${e.target.value}`,
-            isValidName: false,
-            errorMessage: "",
-          },
-        }
-        if(this.employee.department.value==""){
+      case "department":
+        {
+          console.log("in dep");
           this.employee = {
             ...this.employee,
             department: {
               value: `${e.target.value}`,
               isValidName: false,
-              errorMessage: "*Choose Department",
-            },
-          }
-        }
-        else{
-          this.employee = {
-            ...this.employee,
-            department: {
-              value: `${e.target.value}`,
-              isValidName: true,
               errorMessage: "",
             },
+          };
+          if (this.employee.department.value == "") {
+            this.employee = {
+              ...this.employee,
+              department: {
+                value: `${e.target.value}`,
+                isValidName: false,
+                errorMessage: "*Choose Department",
+              },
+            };
+          } else {
+            this.employee = {
+              ...this.employee,
+              department: {
+                value: `${e.target.value}`,
+                isValidName: true,
+                errorMessage: "",
+              },
+            };
           }
         }
+        break;
 
-      }break;
-
-      case "designation":{
-        console.log("in designation")
-        this.employee = {
-          ...this.employee,
-          designation: {
-            value: `${e.target.value}`,
-            isValidName: false,
-            errorMessage: "",
-          },
-        }
-        if(this.employee.designation.value==""){
+      case "designation":
+        {
+          console.log("in designation");
           this.employee = {
             ...this.employee,
             designation: {
               value: `${e.target.value}`,
               isValidName: false,
-              errorMessage: "*Choose designation",
-            },
-          }
-        }else{
-          this.employee = {
-            ...this.employee,
-            designation: {
-              value: `${e.target.value}`,
-              isValidName: true,
               errorMessage: "",
             },
+          };
+          if (this.employee.designation.value == "") {
+            this.employee = {
+              ...this.employee,
+              designation: {
+                value: `${e.target.value}`,
+                isValidName: false,
+                errorMessage: "*Choose designation",
+              },
+            };
+          } else {
+            this.employee = {
+              ...this.employee,
+              designation: {
+                value: `${e.target.value}`,
+                isValidName: true,
+                errorMessage: "",
+              },
+            };
           }
         }
-      }break;
+        break;
 
-      case "ountry":{
-        console.log(e.target.value)
+      case "ountry":
+        {
+          console.log(e.target.value);
 
-        this.employee = {
-          ...this.employee,
-          country: {
-            value: `${e.target.value}`,
-            isValidName: false,
-            errorMessage: "",
-          },
-        }
-          if(this.employee.country.value ==""){
+          this.employee = {
+            ...this.employee,
+            country: {
+              value: `${e.target.value}`,
+              isValidName: false,
+              errorMessage: "",
+            },
+          };
+          if (this.employee.country.value == "") {
             this.employee = {
               ...this.employee,
               country: {
@@ -465,55 +477,53 @@ export class Empform extends LitElement {
                 isValidName: false,
                 errorMessage: "*choose country",
               },
-
+            };
+          } else {
+            this.employee = {
+              ...this.employee,
+              country: {
+                value: `${e.target.value}`,
+                isValidName: true,
+                errorMessage: "",
+              },
+            };
           }
-      }else{
-        
-          this.employee = {
-            ...this.employee,
-            country: {
-              value: `${e.target.value}`,
-              isValidName: true,
-              errorMessage: "",
-            },
-
         }
+        break;
 
-      
-    }
-  }break;
-
-      case "per_email": {
-        this.employee = {
-          ...this.employee,
-          per_email: {
-            value: `${e.target.value}`,
-            isValidName: false,
-            errorMessage: "",
-          },
-        };
-        var emailstr = this.employee.per_email.value;
-        var emailpart = emailstr.slice(-10);
-        if (emailstr.includes("@gmail.com") && emailstr.length > 14) {
-          this.employee = {
-            ...this.employee,
-            per_email: {
-              value: `${e.target.value}`,
-              isValidName: true,
-              errorMessage: "",
-            },
-          };
-        } else {
+      case "per_email":
+        {
           this.employee = {
             ...this.employee,
             per_email: {
               value: `${e.target.value}`,
               isValidName: false,
-              errorMessage: "*Domain should be (gmail.com)",
+              errorMessage: "",
             },
           };
+          var emailstr = this.employee.per_email.value;
+          var emailpart = emailstr.slice(-10);
+          if (emailstr.includes("@gmail.com") && emailstr.length > 14) {
+            this.employee = {
+              ...this.employee,
+              per_email: {
+                value: `${e.target.value}`,
+                isValidName: true,
+                errorMessage: "",
+              },
+            };
+          } else {
+            this.employee = {
+              ...this.employee,
+              per_email: {
+                value: `${e.target.value}`,
+                isValidName: false,
+                errorMessage: "*Domain should be (gmail.com)",
+              },
+            };
+          }
         }
-      }break;
+        break;
 
       case "line1":
         {
@@ -610,8 +620,8 @@ export class Empform extends LitElement {
                 value: `${e.target.value}`,
                 isValidName: false,
                 errorMessage: "*Please enter valid pincode",
-              }
-            }
+              },
+            };
           } else {
             this.employee = {
               ...this.employee,
