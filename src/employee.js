@@ -235,6 +235,12 @@ export class Empform extends LitElement {
   }
   static get styles() {
     return css`
+    @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+    
+    *{
+      font-family: 'Lato', sans-serif;
+    }
       span {
         color: red;
       }
@@ -283,13 +289,20 @@ export class Empform extends LitElement {
           padding: 4px 15px;
           font-size: large;
           font-weight: 550;
-          background: black;
-          color: white;
-          border-radius: 7px;
+          background-color:#00008B;
+          color:white;
+      
+          border-radius: 4px;
+          box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+          cursor:pointer;
+          
         }
         #sub_btn:hover {
-          background: white;
-          color: black;
+          animation: pulse 1s;
+          transition: .2s;
+          background-color :white;
+          color:#00008B;
+          box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
         }
       }
     `;
@@ -679,7 +692,7 @@ export class Empform extends LitElement {
           };
           if (
             this.employee.name.value === "" ||
-            this.employee.name.value.length >= 4
+            this.employee.name.value.length >= 40
           ) {
             console.log("in if");
             this.employee = {
