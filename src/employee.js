@@ -40,10 +40,12 @@ export class Empform extends LitElement {
 
   render() {
     return html`
-    <form>
-        
-    
+    <div class="head">
+    <form class="form">
       <div class="container">
+        <header class="heading">
+          <h1 id="heading">Registration Form</h1> 
+       </header>
         <div class="input_field"  id="name">
             <label class="inp_lable">Name:</label>
           <input
@@ -149,7 +151,7 @@ export class Empform extends LitElement {
                 this.validate(e, "line1");
               }}>
               <span>${this.employee.line1?.errorMessage}</span>
-            <div>
+            </div>
 
             <div class="input_add" id="line_2">
               <label for="line2">Address Line 2:</label>
@@ -159,7 +161,7 @@ export class Empform extends LitElement {
                 this.validate(e, "line2");
               }}>
               <span>${this.employee.line2?.errorMessage}</span>
-            <div>
+            </div>
 
             <div class="input_add" id="city">
                <label for="city_name">City:</label>
@@ -229,93 +231,101 @@ export class Empform extends LitElement {
 
        
             </form>
+              </div>
 
       
     `;
   }
   static get styles() {
     return css`
-    @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+      @import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
 
-    
-    *{
-      font-family: 'Lato', sans-serif;
-    }
+      * {
+        font-family: "Lato", sans-serif;
+      }
+
       span {
         color: red;
+        width: 200px;
       }
-      #line_2 {
-        margin-top: 1rem;
-      }
-      #city {
-        margin-top: 1rem;
+
+      input {
+        display: flex;
+        width: 200px;
+        justify-self: right;
       }
 
       .container {
+        margin: 20px;
+        width: 30vw;
         border: 2px solid black;
         border-radius: 10px;
         background-color: #fff;
-        display: flex;
-        padding: 2rem;
-        /* align-items: center; */
-        width: 40vw;
-        height: auto;
-        flex-direction: column;
+        padding: 2rem 5rem;
         box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+      }
+      .heading {
+        border: 2px solid #00008b;
+        border-radius: 5px;
+        text-align: center;
+        background: #00008b;
+        color: white;
+        margin-bottom: 1rem;
+      }
+      .form input {
+        display: inline-block;
+        width: 100%;
+      }
+      .form label {
+        font-weight: bold;
+      }
+      .container div {
+        margin-bottom: 1rem;
+      }
+      .btn {
+        display: flex;
+        margin-top: 2rem;
+        justify-content: center;
+      }
+      #sub_btn {
+        font-weight: bold;
+        background-color: #2355b7;
+        padding: 5px 18px;
+        color: white;
+        cursor: pointer;
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+      }
 
-        .input_field {
-          margin-bottom: 2rem;
-          display: block;
-          flex-direction: column;
-          justify-content: left;
-          align-items: left;
-          width: 100%;
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
         }
+        70% {
+          transform: scale(0.9);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
 
-        .input_field:hover {
-          box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-          border-radius: 3px;
-          padding: 3px;
-        }
-        .input_add {
-          margin-bottom: 1rem;
-        }
-        .btn {
-          margin-top: 2rem;
-          display: flex;
-          justify-content: center;
-        }
-        #sub_btn {
-          padding: 4px 15px;
-          font-size: large;
-          font-weight: 550;
-          background-color:#00008B;
-          color:white;
-      
-          border-radius: 4px;
-          box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
-          cursor:pointer;
-          
-        }
-        #sub_btn:hover {
-          animation: pulse 1s;
-          transition: .2s;
-          background-color :white;
-          color:#00008B;
-          box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-        }
+      #sub_btn:hover {
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
+        color: #2355b7;
+        background-color: white;
+        animation: pulse 1s;
+        transition: 0.2s;
       }
     `;
   }
 
   _submit(e) {
-    e.preventDefault()
+    e.preventDefault();
     if (
       this.employee.name.isValidName === true &&
       this.employee.emp_code.isValidName === true &&
       this.employee.email.isValidName === true &&
-      this.employee.per_email.isValidName ===true &&
-      this.employee.department.isValidName ===true  &&
+      this.employee.per_email.isValidName === true &&
+      this.employee.department.isValidName === true &&
       this.employee.designation.isValidName === true &&
       this.employee.phone.isValidName === true &&
       this.employee.line1.isValidName === true &&
@@ -326,7 +336,6 @@ export class Empform extends LitElement {
       this.employee.country.isValidName === true &&
       this.employee.pincode.isValidName === true
     ) {
-
       let data = {
         Name: this.employee.name.value,
         Emp_code: this.employee.emp_code.value,
@@ -346,14 +355,14 @@ export class Empform extends LitElement {
       };
 
       //  localStorage.clear("Form_Data");
-      // let olddata = JSON.parse(localStorage.getItem("Form_Data"));
-      // this.full_data.push(olddata);
-      this.format.push(data);
+      let olddata = JSON.parse(localStorage.getItem("Form_Data"));
+      olddata.push(data);
+      // this.format.push(data);
 
-      localStorage.setItem("Form_Data", JSON.stringify(this.format) );
+      localStorage.setItem("Form_Data", JSON.stringify(olddata));
       // let data=JSON.parse(localStorage.getItem("Form_Data"));
       // console.log(data);
-      const form =this.renderRoot.querySelector("form")
+      const form = this.renderRoot.querySelector("form");
       form.reset();
       alert("Form Submitted Successfully");
     }

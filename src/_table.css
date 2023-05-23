@@ -9,7 +9,7 @@
 .container{
     width: 100vw;
     height: 100vh;
-    background-color: #B9D9EB;
+    background:linear-gradient(90deg,#c7dbff,#008b80);
 }
 .table{
     margin-top:2rem;

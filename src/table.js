@@ -304,6 +304,10 @@ export class Table extends LitElement {
           </form>
           </dialog> 
         </div>
+          <div class="sort_div">
+            <button id="srt_btn" @click=${()=>{this.sort_func()}}>Sort by Name</button>
+          </div>
+
             <div class="information">
               <table id="table">
                 <tr>
@@ -362,6 +366,8 @@ export class Table extends LitElement {
       </div>
     `;
   }
+
+
   edit(index) {
     const editform = this.renderRoot.querySelector("#edit_f");
     editform.showModal();
@@ -408,6 +414,23 @@ export class Table extends LitElement {
   cancel_edit() {
     window.location.reload();
   }
+  sort_func() {
+    console.log(data);
+    this.ascending = !this.ascending;
+    const multiplier = this.ascending ? 1 : -1;
+    this.data.sort((x, y) => {
+      const name1 = x.Name.toLowerCase();
+      const name2 = y.Name.toLowerCase();
+      if (name1 < name2) {
+        return -1 * multiplier;
+      }
+      if (name1 > name2) {
+        return 1 * multiplier;
+      }
+    });
+    window.location.reload();
+  }
 }
+
 
 window.customElements.define("emp-table", Table);
