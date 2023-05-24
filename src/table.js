@@ -1,6 +1,8 @@
 import { LitElement, css, html } from "lit";
 import { repeat } from "lit/directives/repeat.js";
 import { department, designation, country, state } from "./data";
+import { Empform } from "./employee";
+
 
 export class Table extends LitElement {
   static get properties() {
@@ -10,6 +12,7 @@ export class Table extends LitElement {
       on_index: { type: Number },
       full_data: { type: Array },
       department: { type: String },
+      editmode:{type:Array}
     };
   }
   constructor() {
@@ -36,6 +39,7 @@ export class Table extends LitElement {
       ed_pincode: "",
     };
     this.on_index = -1;
+    this.editmode=[];
   }
 
   static get styles() {
@@ -171,7 +175,12 @@ export class Table extends LitElement {
         <dialog id="edit_f"> 
         <form method="dialog" class="dis_form">
           <h2>Edit Details</h2>
-          <div class= input_div>
+
+          <emp-form>
+
+          
+             </emp-form>
+          <!-- <div class= input_div>
           <label  for="">Name:</label>
           <input  type="text" id="e_name" value=${this.emp_data.Name}>
           </div>
@@ -288,7 +297,7 @@ export class Table extends LitElement {
           
           <label for="">Pincode:</label>
           <input type="" id="e_pincode" value=${this.emp_data.Pincode}>
-          </div>
+          </div> -->
 
           <div class=btn>
           <button type="submit" @click=${() => {
@@ -369,6 +378,9 @@ export class Table extends LitElement {
 
 
   edit(index) {
+
+    this.editmode = ["t",index];
+    JSON.stringify(localStorage.setItem("Edit",this.editmode));
     const editform = this.renderRoot.querySelector("#edit_f");
     editform.showModal();
     var show = this.renderRoot.querySelector("#Form");
@@ -414,22 +426,7 @@ export class Table extends LitElement {
   cancel_edit() {
     window.location.reload();
   }
-  sort_func() {
-    console.log(data);
-    this.ascending = !this.ascending;
-    const multiplier = this.ascending ? 1 : -1;
-    this.data.sort((x, y) => {
-      const name1 = x.Name.toLowerCase();
-      const name2 = y.Name.toLowerCase();
-      if (name1 < name2) {
-        return -1 * multiplier;
-      }
-      if (name1 > name2) {
-        return 1 * multiplier;
-      }
-    });
-    window.location.reload();
-  }
+
 }
 
 
