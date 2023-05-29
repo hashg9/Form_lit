@@ -1,8 +1,7 @@
-import { LitElement, css, html } from "lit";
+import { LitElement, css, html, nothing } from "lit";
 import { repeat } from "lit/directives/repeat.js";
 import { department, designation, country, state } from "./data";
-import { Empform } from "./employee";
-
+import "./employee";
 
 export class Table extends LitElement {
   static get properties() {
@@ -12,14 +11,16 @@ export class Table extends LitElement {
       on_index: { type: Number },
       full_data: { type: Array },
       department: { type: String },
-      editmode:{type:Array}
+      editmode: { type: Array },
+      editData: {type: Object},
+      
     };
   }
   constructor() {
     super(),
-      (this.data = JSON.parse(localStorage.getItem("Form_Data"))),
-      (this.emp_data = {}),
-      (this.full_data = {});
+      this.data = JSON.parse(localStorage.getItem("Form_Data"))
+      this.emp_data = {}
+      this.full_data = {}
 
     this.eddited_data = {
       ed_name: "",
@@ -39,7 +40,9 @@ export class Table extends LitElement {
       ed_pincode: "",
     };
     this.on_index = -1;
-    this.editmode=[];
+    this.editmode = [];
+    this.editData=undefined;
+    
   }
 
   static get styles() {
@@ -109,10 +112,7 @@ export class Table extends LitElement {
     label{
       font-weight:bold;
     }
-    .edit_form{
-      display:none;
-      
-    }
+    
     .visible{
       display:block;
       align-self:center;
@@ -130,11 +130,18 @@ export class Table extends LitElement {
     }
     #edit_f{
       
-      position: fixed;
+      /* position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      padding: 30px;
+      padding: 30px; */
+      width:50%;
+      padding: 1em;
+      height:80%;
+      margin:70px auto;
+      overflow-y:scroll;
+
+    
 
     }
     .dis_form h2 {
@@ -172,149 +179,26 @@ export class Table extends LitElement {
     return html`
       <div class="container"  class="container dialog-open">
         <div class= "edit_form" id="Form" >
-        <dialog id="edit_f"> 
-        <form method="dialog" class="dis_form">
-          <h2>Edit Details</h2>
+        
 
-          <emp-form>
+          ${this.editData ? html`
+                
+                <dialog  id="edit_f" class="modal">
+                  
+                  ${console.log("dialog",this.editData)}
+                
+                    <emp-form isEditing .editData = ${this.editData}>
+                  
+                  </emp-form >
+                  <button @click=${this.closemodal}>Cancel</button>
+                </dialog>` : nothing}
 
-          
-             </emp-form>
-          <!-- <div class= input_div>
-          <label  for="">Name:</label>
-          <input  type="text" id="e_name" value=${this.emp_data.Name}>
-          </div>
 
-          <div class="emp_code">
-          <label for="">Employee Code:</label>
-          <input type="" id="e_code" value=${this.emp_data.Emp_code}>
-          </div>
-
-          <div class="email">
-          <label for="">Email:</label>
-          <input type="" id="e_email" value=${this.emp_data.Email}>
-          </div>
-
-          <div class="per_email">
-          
-          <label for="">Personal Email:</label>
-          <input type="" id="e_pemail" value=${this.emp_data.Per_email}>
-  
-          </div>
-
-          <div class="department">
-           
-          <label for="">Department:</label>
-          <input list="dep_ch" id="e_department" value=${
-            this.emp_data.Department
-          }>
-          <datalist id="dep_ch">
-            ${repeat(
-              department,
-              (items) => html` <option>${items.department}</option> `
-            )}
- 
-          </div>
-
-          <div class="designation">
-          <label for="">Designation:</label>
-          <input list="des_ch" id="e_designation" value=${
-            this.emp_data.Designation
-          }>
-          <datalist id="des_ch">
-            ${repeat(
-              designation,
-              (items) => html`<option>${items.designation}</option>`
-            )}    
-            
-          </datalist>
-          </div>
-
-          <div class="ph_num">
-           
-          <label for="">Phone Number:</label>
-          <input type="" id="e_phone" value=${this.emp_data.Phone}>
-           
-          </div>
-
-          <div class="per_num">
-            
-          
-          <label for="">Personal Phone:</label>
-          <input type="" id="e_perphone" value=${this.emp_data.Sec_phone}>
-          </div>
-
-          <div class="line1">
-            
-          
-          <label for="">Address line1:</label>
-          <input type="" id="e_line1" value=${this.emp_data.Add_line1}>
-          </div>
-
-          <div class="line2">
-            
-          <label for="">Address line2:</label>
-          <input type="" id="e_line2" value=${this.emp_data.Add_line2}>
-          
-          </div>
-
-          <div class="landmark">
-         
-          <label for="">Landmark:</label>
-          <input type="" id="e_landmark" value=${this.emp_data.Landmark}>
-   
-          </div>
-
-          <div class="city">
-           
-          <label for="">City:</label >
-          <input type="" id="e_city" value=${this.emp_data.City}>
- 
-          </div>
-
-          <div class="state">
-            
-          <label for="">State:</label>
-          <input  list="state_ch" id="e_state" value=${this.emp_data.State}>
-          <datalist id="state_ch">
-            ${repeat(
-              state,
-              (items) => html`<option>${items.state}</option>`
-            )}    
-            
-          </datalist>
-          </div>
-
-          <div class="country">
-            
-          
-          <label for="">Country:</label>
-          <input type="" id="e_country" value=${this.emp_data.Country}>
-          </div>
-
-          <div class="pincode">
-            
-          
-          <label for="">Pincode:</label>
-          <input type="" id="e_pincode" value=${this.emp_data.Pincode}>
-          </div> -->
-
-          <div class=btn>
-          <button type="submit" @click=${() => {
-            this.savechanges();
-          }}>Save Changes</button>
-
-          <button @click=${() => {
-            this.cancel_edit();
-          }}>Cancel Edit</button>
-
-          </div>
-
-          </form>
-          </dialog> 
         </div>
           <div class="sort_div">
-            <button id="srt_btn" @click=${()=>{this.sort_func()}}>Sort by Name</button>
+            <button id="srt_btn" @click=${() => {
+              this.sort_func();
+            }}>Sort by Name</button>
           </div>
 
             <div class="information">
@@ -359,8 +243,16 @@ export class Table extends LitElement {
                         <td>${items.Country}</td>
                         <td>${items.Pincode}</td>
                         <td>
-                          <button class= "tbl_btn" @click=${() => this.edit(index)}>Edit</button>
-                          <button class= "tbl_btn" @click=${() => this.delete(index)}>
+                          <button
+                            class="tbl_btn"
+                            @click=${() => this.edit(index)}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            class="tbl_btn"
+                            @click=${() => this.delete(index)}
+                          >
                             Delete
                           </button>
                         </td>
@@ -376,18 +268,27 @@ export class Table extends LitElement {
     `;
   }
 
-
   edit(index) {
-
-    this.editmode = ["t",index];
-    JSON.stringify(localStorage.setItem("Edit",this.editmode));
-    const editform = this.renderRoot.querySelector("#edit_f");
-    editform.showModal();
-    var show = this.renderRoot.querySelector("#Form");
-    show.classList.remove("edit_form");
-
+    
+    const items = this.data[index];
+    this.editData = items;
+    console.log("edit",this.editData);
     this.on_index = index;
-    this.emp_data = this.data[index];
+
+    requestAnimationFrame(()=> {
+      this.openmodal();
+  })
+
+
+  }
+  openmodal() {
+    console.log("hi")
+    let modal = this.renderRoot.querySelector(".modal");
+    modal.showModal();
+}
+  closemodal(){
+    this.editData=undefined;
+    window.location.reload();
   }
   savechanges() {
     var new_data = this.data[this.on_index];
@@ -423,11 +324,7 @@ export class Table extends LitElement {
     localStorage.setItem("Form_Data", JSON.stringify(this.data));
     window.location.reload();
   }
-  cancel_edit() {
-    window.location.reload();
-  }
-
+ 
 }
-
 
 window.customElements.define("emp-table", Table);

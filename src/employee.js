@@ -3,19 +3,19 @@ import { department, designation, country, state } from "./data";
 import { repeat } from "lit/directives/repeat.js";
 
 export class Empform extends LitElement {
-  static get properties() {
-    return {
-      employee: { type: Object },
-      department: { type: String },
-      designation: { type: String },
-      state: { type: String },
-      data: { type: Object },
-      olddata: { type: Array },
-      format: { type: Array },
-      editmode: { type: Array },
-      edited_data:{type: Array}
-    };
-  }
+  static properties = {
+    employee: { type: Object },
+    department: { type: String },
+    designation: { type: String },
+    state: { type: String },
+    data: { type: Object },
+    olddata: { type: Array },
+    format: { type: Array },
+    editmode: { type: Array },
+    edited_data: { type: Array },
+    isEditing: { type: Boolean },
+    editData: { type: Object },
+  };
 
   constructor() {
     super();
@@ -38,7 +38,37 @@ export class Empform extends LitElement {
     };
 
     this.format = [];
+    this.isEditing=false;
   }
+
+  firstUpdated() {
+    if (this.isEditing) {
+      console.log("isEditing");
+      console.log("from form component", this.editData);
+
+      // var name = this.renderRoot.querySelector("#f_name");
+
+      // run a function to pre-fill form
+    } else {
+      console.log("creating new");
+    }
+  }
+
+  decide(e, type) {
+    if (this.isEditing) {
+      var edit_index = sessionStorage.getItem("edit_index");
+      console.log(edit_index);
+      console.log("IN EDDI");
+    } else {
+      this.validate(e, type);
+      console.log("main");
+    }
+  }
+
+  cancel_edit() {
+    window.location.reload();
+  }
+
 
   render() {
     return html`
@@ -56,6 +86,8 @@ export class Empform extends LitElement {
             @input=${(e) => this.validate(e, "name")}
           /><span>${this.employee.name.errorMessage}</span>
         </div>
+
+
         <div class="input_field" id="emp_code">
         <label class="inp_lable">Employee Code:</label>
           <input
@@ -233,7 +265,17 @@ export class Empform extends LitElement {
         
 
       <div class=btn>
-        <button id="sub_btn" @click=${(e) => this._submit(e)}>Submit</button>
+        
+        ${
+          !this.isEditing
+            ? html`<button id="sub_btn" @click=${(e) => this._submit(e)}>
+                Submit
+              </button>`
+            : html`<button class="btn" type="submit" @click=${(e) => this._submit(e)}>Update</button>
+                <button class="btn" @click=${() => this.cancel_edit()}>
+                  Cancel
+                </button>`
+        }
       </div>
 
        
@@ -325,50 +367,7 @@ export class Empform extends LitElement {
 
   _submit(e) {
     e.preventDefault();
-    var editmode = localStorage.getItem("Edit");
-    if (false) {
-      var editformdata = JSON.parse(localStorage.getItem("Form_Data"));
-      var index = editmode[2];
-      var name = this.renderRoot.querySelector("#f_name");
-      var emp_code = this.renderRoot.querySelector("#f_code");
-      var email = this.renderRoot.querySelector("#f_email");
-      var per_email = this.renderRoot.querySelector("#f_peremail");
-      var dep = this.renderRoot.querySelector("#f_dep");
-      var des = this.renderRoot.querySelector("#f_des");
-      var f_ph = this.renderRoot.querySelector("#f_phone");
-      var f_secph = this.renderRoot.querySelector("#f_secph");
-      var line1 = this.renderRoot.querySelector("#f_line1");
-      var line2 = this.renderRoot.querySelector("#f_line2");
-      var city = this.renderRoot.querySelector("#f_city");
-      var landmark = this.renderRoot.querySelector("#f_landmark");
-      var state = this.renderRoot.querySelector("#f_state");
-      var country = this.renderRoot.querySelector("#f_country");
-      var f_code = this.renderRoot.querySelector("#f_pincode");
-
-      editformdata[index].Name== name.value;
-      editformdata[index].Emp_code== emp_code.value;
-      editformdata[index].Email== email.value;
-      editformdata[index].Per_email== per_email.value;
-      editformdata[index].Department== dep.value;
-      editformdata[index].Designation== des.value;
-      editformdata[index].Phone== f_ph.value;
-      editformdata[index].Sec_phone== f_secph.value;
-      editformdata[index].Add_line1== line1.value;
-      editformdata[index].Add_line2== line2.value;
-      editformdata[index].City== city.value;
-      editformdata[index].Landmark== landmark.value;
-      editformdata[index].State== state.value;
-      editformdata[index].Country== country.value;
-      editformdata[index].Pincode== f_code.value;
-      
-      this.edited_data=editformdata;
-      console.log(editformdata);
-      localStorage.setItem("Form_Data", JSON.stringify(this.edited_data));
-      window.location.reload();
-      console.log();
-
-    }
-    else if (
+    if (
       this.employee.name.isValidName === true &&
       this.employee.emp_code.isValidName === true &&
       this.employee.email.isValidName === true &&
@@ -412,554 +411,289 @@ export class Empform extends LitElement {
       // console.log(data);
       const form = this.renderRoot.querySelector("form");
       form.reset();
-      alert("Form Submitted Successfully");
+      alert("Submitted");
     }
   }
 
+  save_true(value, type) {
+    this.employee = {
+      ...this.employee,
+      [type]: {
+        value: `${value}`,
+        isValidName: true,
+        errorMessage: "",
+      },
+    };
+  }
+
+  save_default_value(value, type) {
+    this.employee = {
+      ...this.employee,
+      [type]: {
+        value: `${value}`,
+        isValidName: false,
+        errorMessage: "",
+      },
+    };
+  }
+
+  set_errorMessage(value, type, error) {
+    this.employee = {
+      ...this.employee,
+      [type]: {
+        value: `${value}`,
+        isValidName: false,
+        errorMessage: error,
+      },
+    };
+  }
+
   validate(e, input_type) {
-    var editmode = localStorage.getItem("Edit");
-    if (false) {
-      var editformdata = JSON.parse(localStorage.getItem("Form_Data"));
-      console.log(editformdata);
-      var index = editmode[2];
-      var name = this.renderRoot.querySelector("#f_name");
-      var emp_code = this.renderRoot.querySelector("#f_code");
-      var email = this.renderRoot.querySelector("#f_email");
-      var per_email = this.renderRoot.querySelector("#f_peremail");
-      var dep = this.renderRoot.querySelector("#f_dep");
-      var des = this.renderRoot.querySelector("#f_des");
-      var f_ph = this.renderRoot.querySelector("#f_phone");
-      var f_secph = this.renderRoot.querySelector("#f_secph");
-      var line1 = this.renderRoot.querySelector("#f_line1");
-      var line2 = this.renderRoot.querySelector("#f_line2");
-      var city = this.renderRoot.querySelector("#f_city");
-      var landmark = this.renderRoot.querySelector("#f_landmark");
-      var state = this.renderRoot.querySelector("#f_state");
-      var country = this.renderRoot.querySelector("#f_country");
-      var f_code = this.renderRoot.querySelector("#f_pincode");
-      name.placeholder = editformdata[index].Name;
-      emp_code.placeholder = editformdata[index].Emp_code;
-      email.placeholder = editformdata[index].Email;
-      per_email.placeholder = editformdata[index].Per_email;
-      dep.placeholder = editformdata[index].Department;
-      des.placeholder = editformdata[index].Designation;
-      f_ph.placeholder = editformdata[index].Phone;
-      f_secph.placeholder = editformdata[index].Sec_phone;
-      line1.placeholder = editformdata[index].Add_line1;
-      line2.placeholder = editformdata[index].Add_line2;
-      city.placeholder = editformdata[index].City;
-      landmark.placeholder = editformdata[index].Landmark;
-      state.placeholder = editformdata[index].State;
-      country.placeholder = editformdata[index].Country;
-      f_code.placeholder = editformdata[index].Pincode;
-    } else {
-      switch (input_type) {
-        case "state": {
+    switch (input_type) {
+      case "name":
+        {
+          this.save_default_value(e.target.value, "name");
+          if (
+            this.employee.name.value === "" ||
+            this.employee.name.value.length >= 40
+          ) {
+            this.set_errorMessage(
+              e.target.value,
+              "name",
+              "*Name can have maximum 40 characters"
+            );
+          } else {
+            this.save_true(e.target.value, "name");
+          }
+        }
+        break;
+
+      case "state": {
+        this.save_default_value(e.target.value, "state");
+
+        if (this.employee.state.value == "") {
+          this.set_errorMessage(e.target.value, "state", "*Choose State");
+        } else {
+          this.save_true(e.target.value, "state");
+        }
+      }
+
+      case "line2":
+        {
           this.employee = {
             ...this.employee,
-            state: {
+            line2: {
               value: `${e.target.value}`,
-              isValidName: false,
+              isValidName: true,
               errorMessage: "",
             },
           };
-          if (this.employee.state.value == "") {
-            this.employee = {
-              ...this.employee,
-              state: {
-                value: `${e.target.value}`,
-                isValidName: false,
-                errorMessage: "*Choose State",
-              },
-            };
+        }
+        break;
+
+      case "department":
+        {
+          this.save_default_value(e.target.value, "department");
+
+          if (this.employee.department.value == "") {
+            this.set_errorMessage(
+              e.target.value,
+              "department",
+              "*Choose Department"
+            );
           } else {
-            this.employee = {
-              ...this.employee,
-              state: {
-                value: `${e.target.value}`,
-                isValidName: true,
-                errorMessage: "",
-              },
-            };
+            this.save_true(e.target.value, "department");
           }
         }
+        break;
 
-        case "line2":
-          {
-            this.employee = {
-              ...this.employee,
-              line2: {
-                value: `${e.target.value}`,
-                isValidName: true,
-                errorMessage: "",
-              },
-            };
+      case "designation":
+        {
+          this.save_default_value(e.target.value, "designation");
+
+          if (this.employee.designation.value == "") {
+            this.set_errorMessage(
+              e.target.value,
+              "designation",
+              "*Choose Designation"
+            );
+          } else {
+            this.save_true(e.target.value, "designation");
           }
-          break;
+        }
+        break;
 
-        case "department":
-          {
-            console.log("in dep");
-            this.employee = {
-              ...this.employee,
-              department: {
-                value: `${e.target.value}`,
-                isValidName: false,
-                errorMessage: "",
-              },
-            };
-            if (this.employee.department.value == "") {
-              this.employee = {
-                ...this.employee,
-                department: {
-                  value: `${e.target.value}`,
-                  isValidName: false,
-                  errorMessage: "*Choose Department",
-                },
-              };
-            } else {
-              this.employee = {
-                ...this.employee,
-                department: {
-                  value: `${e.target.value}`,
-                  isValidName: true,
-                  errorMessage: "",
-                },
-              };
-            }
+      case "country":
+        {
+          this.save_default_value(e.target.value, "country");
+
+          if (this.employee.country.value == "") {
+            this.set_errorMessage(e.target.value, "country", "*Choose Country");
+          } else {
+            this.save_true(e.target.value, "country");
           }
-          break;
+        }
+        break;
 
-        case "designation":
-          {
-            console.log("in designation");
-            this.employee = {
-              ...this.employee,
-              designation: {
-                value: `${e.target.value}`,
-                isValidName: false,
-                errorMessage: "",
-              },
-            };
-            if (this.employee.designation.value == "") {
-              this.employee = {
-                ...this.employee,
-                designation: {
-                  value: `${e.target.value}`,
-                  isValidName: false,
-                  errorMessage: "*Choose designation",
-                },
-              };
-            } else {
-              this.employee = {
-                ...this.employee,
-                designation: {
-                  value: `${e.target.value}`,
-                  isValidName: true,
-                  errorMessage: "",
-                },
-              };
-            }
+      case "per_email":
+        {
+          this.save_default_value(e.target.value, "per_email");
+          var emailstr = this.employee.per_email.value;
+          var emailpart = emailstr.slice(-10);
+          if (emailstr.includes("@gmail.com") && emailstr.length > 14) {
+            this.save_true(e.target.value, "per_email");
+          } else {
+            this.set_errorMessage(
+              e.target.value,
+              "per_email",
+              "*Domain should be (gmail.com)"
+            );
           }
-          break;
+        }
+        break;
 
-        case "ountry":
-          {
-            console.log(e.target.value);
-
-            this.employee = {
-              ...this.employee,
-              country: {
-                value: `${e.target.value}`,
-                isValidName: false,
-                errorMessage: "",
-              },
-            };
-            if (this.employee.country.value == "") {
-              this.employee = {
-                ...this.employee,
-                country: {
-                  value: `${e.target.value}`,
-                  isValidName: false,
-                  errorMessage: "*choose country",
-                },
-              };
-            } else {
-              this.employee = {
-                ...this.employee,
-                country: {
-                  value: `${e.target.value}`,
-                  isValidName: true,
-                  errorMessage: "",
-                },
-              };
-            }
+      case "line1":
+        {
+          this.save_default_value(e.target.value, "line1");
+          if (this.employee.line1.value === "") {
+            this.set_errorMessage(
+              e.target.value,
+              "line1",
+              "*Address line1 cannot be empty"
+            );
+          } else if (this.employee.line1.value.length > 5) {
+            this.set_errorMessage(
+              e.target.value,
+              "line1",
+              "*Maximun 80 characters allowed"
+            );
+          } else {
+            this.save_true(e.target.value, "line1");
           }
-          break;
+        }
+        break;
 
-        case "per_email":
-          {
-            this.employee = {
-              ...this.employee,
-              per_email: {
-                value: `${e.target.value}`,
-                isValidName: false,
-                errorMessage: "",
-              },
-            };
-            var emailstr = this.employee.per_email.value;
-            var emailpart = emailstr.slice(-10);
-            if (emailstr.includes("@gmail.com") && emailstr.length > 14) {
-              this.employee = {
-                ...this.employee,
-                per_email: {
-                  value: `${e.target.value}`,
-                  isValidName: true,
-                  errorMessage: "",
-                },
-              };
-            } else {
-              this.employee = {
-                ...this.employee,
-                per_email: {
-                  value: `${e.target.value}`,
-                  isValidName: false,
-                  errorMessage: "*Domain should be (gmail.com)",
-                },
-              };
-            }
+      case "city":
+        {
+          this.save_default_value(e.target.value, "city");
+
+          if (
+            this.employee.city.value == "" ||
+            this.employee.city.value.length > 20
+          ) {
+            this.set_errorMessage(
+              e.target.value,
+              "city",
+              "*Cannot have more than 20 characters"
+            );
+          } else {
+            this.save_true(e.target.value, "city");
           }
-          break;
+        }
+        break;
 
-        case "line1":
-          {
-            this.employee = {
-              ...this.employee,
-              line1: {
-                value: `${e.target.value}`,
-                isValidName: false,
-                errorMessage: "",
-              },
-            };
-            if (this.employee.line1.value === "") {
-              this.employee = {
-                ...this.employee,
-                line1: {
-                  value: `${e.target.value}`,
-                  isValidName: false,
-                  errorMessage: "*Address line1 cannot be empty",
-                },
-              };
-            } else if (this.employee.line1.value.length > 5) {
-              this.employee = {
-                ...this.employee,
-                line1: {
-                  value: `${e.target.value}`,
-                  isValidName: false,
-                  errorMessage: "*Maximun 80 characters allowed",
-                },
-              };
-            } else {
-              this.employee = {
-                ...this.employee,
-                line1: {
-                  value: `${e.target.value}`,
-                  isValidName: true,
-                  errorMessage: "",
-                },
-              };
-            }
+      case "pin":
+        {
+          this.save_default_value(e.target.value, "pincode");
+          var pincode = this.employee.pincode.value;
+          var digit = /^\d+$/.test(pincode);
+          if (this.employee.pincode.value.length > 6 || digit === false) {
+            this.set_errorMessage(
+              e.target.value,
+              "pincode",
+              "*Please enter valid pincode"
+            );
+          } else {
+            this.save_true(e.target.value, "pincode");
           }
-          break;
+        }
+        break;
 
-        case "city":
-          {
-            this.employee = {
-              ...this.employee,
-              city: {
-                value: `${e.target.value}`,
-                isValidName: false,
-                errorMessage: "",
-              },
-            };
-            if (
-              this.employee.city.value == "" ||
-              this.employee.city.value.length > 20
-            ) {
-              this.employee = {
-                ...this.employee,
-                city: {
-                  value: `${e.target.value}`,
-                  isValidName: false,
-                  errorMessage: "*Cannot have more than 20 characters",
-                },
-              };
-            } else {
-              this.employee = {
-                ...this.employee,
-                city: {
-                  value: `${e.target.value}`,
-                  isValidName: true,
-                  errorMessage: "",
-                },
-              };
-            }
+      case "landmark":
+        {
+          this.save_default_value(e.target.value, "landmark");
+          if (this.employee.landmark.value === "") {
+            this.set_errorMessage(e.target.value, "landmark", "*Mandatory");
+          } else {
+            this.save_true(e.target.value, "landmark");
           }
-          break;
+        }
+        break;
 
-        case "pin":
-          {
-            this.employee = {
-              ...this.employee,
-              pincode: {
-                value: `${e.target.value}`,
-                isValidName: false,
-                errorMessage: "",
-              },
-            };
-            var pincode = this.employee.pincode.value;
-            var digit = /^\d+$/.test(pincode);
-            if (this.employee.pincode.value.length > 6 || digit === false) {
-              this.employee = {
-                ...this.employee,
-                pincode: {
-                  value: `${e.target.value}`,
-                  isValidName: false,
-                  errorMessage: "*Please enter valid pincode",
-                },
-              };
-            } else {
-              this.employee = {
-                ...this.employee,
-                pincode: {
-                  value: `${e.target.value}`,
-                  isValidName: true,
-                  errorMessage: "",
-                },
-              };
-            }
+      case "code":
+        {
+          this.save_default_value(e.target.value, "emp_code");
+          var codeString = this.employee.emp_code.value;
+          if (codeString.length >= 5) {
+            this.set_errorMessage(
+              e.target.value,
+              "emp_code",
+              "*Can have maximum 4 characters"
+            );
+          } else {
+            this.save_true(e.target.value, "emp_code");
           }
-          break;
+        }
+        break;
 
-        case "landmark":
-          {
-            this.employee = {
-              ...this.employee,
-              landmark: {
-                value: `${e.target.value}`,
-                isValidName: false,
-                errorMessage: "",
-              },
-            };
-            if (this.employee.landmark.value === "") {
-              this.employee = {
-                ...this.employee,
-                landmark: {
-                  value: `${e.target.value}`,
-                  isValidName: false,
-                  errorMessage: "*Mandatory",
-                },
-              };
-            } else {
-              this.employee = {
-                ...this.employee,
-                landmark: {
-                  value: `${e.target.value}`,
-                  isValidName: true,
-                  errorMessage: "",
-                },
-              };
-            }
+      case "email":
+        {
+          this.save_default_value(e.target.value, "email");
+          var emailstr = this.employee.email.value;
+          var emailpart = emailstr.slice(-13);
+          if (
+            emailstr.includes("@annalect.com") &&
+            emailstr.length > 14 &&
+            emailpart === "@annalect.com"
+          ) {
+            this.save_true(e.target.value, "email");
+          } else {
+            this.set_errorMessage(
+              e.target.value,
+              "email",
+              "*Domain should be (annalect.com)"
+            );
           }
-          break;
+        }
+        break;
 
-        case "name":
-          {
-            this.employee = {
-              ...this.employee,
-              name: {
-                value: `${e.target.value}`,
-                isValidName: false,
-                errorMessage: "",
-              },
-            };
-            if (
-              this.employee.name.value === "" ||
-              this.employee.name.value.length >= 40
-            ) {
-              console.log("in if");
-              this.employee = {
-                ...this.employee,
-                name: {
-                  value: `${e.target.value}`,
-                  isValidName: false,
-                  errorMessage: "*Name can have maximum 4 characters",
-                },
-              };
-            } else {
-              console.log("in else");
-              this.employee = {
-                ...this.employee,
-                name: {
-                  value: `${e.target.value}`,
-                  isValidName: true,
-                  errorMessage: "",
-                },
-              };
-            }
+      case "phone":
+        {
+          this.save_default_value(e.target.value, "phone");
+          var phone = this.employee.phone.value;
+          var digit = /^\d+$/.test(phone);
+
+          if (this.employee.phone.value.length == 10 && digit === true) {
+            this.save_true(e.target.value, "phone");
+          } else {
+            this.set_errorMessage(
+              e.target.value,
+              "phone",
+              "*Must contain 10 digits"
+            );
           }
-          break;
+        }
+        break;
 
-        case "code":
-          {
-            this.employee = {
-              ...this.employee,
-              emp_code: {
-                value: `${e.target.value}`,
-                isValidName: false,
-                errorMessage: "",
-              },
-            };
-            var codeString = this.employee.emp_code.value;
-            if (codeString.length >= 5) {
-              this.employee = {
-                ...this.employee,
-                emp_code: {
-                  value: `${e.target.value}`,
-                  isValidName: false,
-                  errorMessage: "*Can have maximum 4 characters",
-                },
-              };
-            } else {
-              this.employee = {
-                ...this.employee,
-                emp_code: {
-                  value: `${e.target.value}`,
-                  isValidName: true,
-                  errorMessage: "",
-                },
-              };
-            }
+      case "sec_phone":
+        {
+          this.save_default_value(e.target.value, "sec_phone");
+          var s_phone = this.employee.sec_phone.value;
+          var digit = /^\d+$/.test(s_phone);
+
+          if (this.employee.sec_phone.value.length == 10 && digit === true) {
+            this.save_true(e.target.value, "sec_phone");
+          } else if (this.employee.sec_phone.value == "") {
+            this.save_true(e.target.value, "sec_phone");
+          } else {
+            this.set_errorMessage(
+              e.target.value,
+              "sec_phone",
+              "*Must contain 10 digits"
+            );
           }
-          break;
-
-        case "email":
-          {
-            this.employee = {
-              ...this.employee,
-              email: {
-                value: `${e.target.value}`,
-                isValidName: false,
-                errorMessage: "",
-              },
-            };
-            var emailstr = this.employee.email.value;
-            var emailpart = emailstr.slice(-13);
-            if (
-              emailstr.includes("@annalect.com") &&
-              emailstr.length > 14 &&
-              emailpart === "@annalect.com"
-            ) {
-              this.employee = {
-                ...this.employee,
-                email: {
-                  value: `${e.target.value}`,
-                  isValidName: true,
-                  errorMessage: "",
-                },
-              };
-            } else {
-              this.employee = {
-                ...this.employee,
-                email: {
-                  value: `${e.target.value}`,
-                  isValidName: false,
-                  errorMessage: "*Domain should be (annalect.com)",
-                },
-              };
-            }
-          }
-          break;
-
-        case "phone":
-          {
-            this.employee = {
-              ...this.employee,
-              phone: {
-                value: `${e.target.value}`,
-                isValidName: false,
-                errorMessage: "",
-              },
-            };
-            var phone = this.employee.phone.value;
-            var digit = /^\d+$/.test(phone);
-
-            if (this.employee.phone.value.length == 10 && digit === true) {
-              this.employee = {
-                ...this.employee,
-                phone: {
-                  value: `${e.target.value}`,
-                  isValidName: true,
-                  errorMessage: "",
-                },
-              };
-            } else {
-              this.employee = {
-                ...this.employee,
-                phone: {
-                  value: `${e.target.value}`,
-                  isValidName: false,
-                  errorMessage: "*Must contain 10 digits",
-                },
-              };
-            }
-          }
-          break;
-
-        case "sec_phone":
-          {
-            this.employee = {
-              ...this.employee,
-              sec_phone: {
-                value: `${e.target.value}`,
-                isValidName: false,
-                errorMessage: "",
-              },
-            };
-            var s_phone = this.employee.sec_phone.value;
-            var digit = /^\d+$/.test(s_phone);
-
-            if (this.employee.sec_phone.value.length == 10 && digit === true) {
-              this.employee = {
-                ...this.employee,
-                sec_phone: {
-                  value: `${e.target.value}`,
-                  isValidName: true,
-                  errorMessage: "",
-                },
-              };
-            } else if (this.employee.sec_phone.value == "") {
-              this.employee = {
-                ...this.employee,
-                sec_phone: {
-                  value: `${e.target.value}`,
-                  isValidName: true,
-                  errorMessage: "",
-                },
-              };
-            } else {
-              this.employee = {
-                ...this.employee,
-                sec_phone: {
-                  value: `${e.target.value}`,
-                  isValidName: false,
-                  errorMessage: "*Must contain 10 digits",
-                },
-              };
-            }
-          }
-          break;
-      }
+        }
+        break;
     }
   }
 }
