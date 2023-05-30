@@ -1,6 +1,10 @@
 import { LitElement, css, html } from "lit";
 import { department, designation, country, state } from "./data";
 import { repeat } from "lit/directives/repeat.js";
+import "@shoelace-style/shoelace/dist/components/alert/alert.js";
+import "@shoelace-style/shoelace/dist/components/progress-ring/progress-ring.js";
+import "@shoelace-style/shoelace/dist/components/input/input.js";
+import "@shoelace-style/shoelace/dist/themes/light.css";
 
 export class Empform extends LitElement {
   static properties = {
@@ -15,7 +19,7 @@ export class Empform extends LitElement {
     edited_data: { type: Array },
     isEditing: { type: Boolean },
     editData: { type: Object },
-    data:{type: Object}
+    data: { type: Object },
   };
 
   constructor() {
@@ -39,18 +43,18 @@ export class Empform extends LitElement {
     };
 
     this.format = [];
-    this.isEditing=false;
+    this.isEditing = false;
   }
 
   firstUpdated() {
     if (this.isEditing) {
       console.log("isEditing");
       console.log("from form component", this.editData);
-      console.log(this.data)
+      console.log(this.data);
 
       var name = this.renderRoot.querySelector("#f_name");
       var emp_code = this.renderRoot.querySelector("#f_code");
-      var email= this.renderRoot.querySelector("#f_email");
+      var email = this.renderRoot.querySelector("#f_email");
       var per_email = this.renderRoot.querySelector("#f_peremail");
       var department = this.renderRoot.querySelector("#f_dep");
       var designation = this.renderRoot.querySelector("#f_des");
@@ -62,12 +66,10 @@ export class Empform extends LitElement {
       var landmark = this.renderRoot.querySelector("#f_landmark");
       var state = this.renderRoot.querySelector("#f_state");
       var country = this.renderRoot.querySelector("#f_country");
-      var pincode= this.renderRoot.querySelector("#f_pincode");
+      var pincode = this.renderRoot.querySelector("#f_pincode");
 
-      
-      
-      name.value= this.editData.Name
-      emp_code.value= this.editData.Emp_code;
+      name.value = this.editData.Name;
+      emp_code.value = this.editData.Emp_code;
       email.value = this.editData.Email;
       per_email.value = this.editData.Per_email;
       department.value = this.editData.Department;
@@ -82,7 +84,6 @@ export class Empform extends LitElement {
       landmark.value = this.editData.Landmark;
       pincode.value = this.editData.Pincode;
 
-
       // run a function to pre-fill form
     } else {
       console.log("creating new");
@@ -92,19 +93,20 @@ export class Empform extends LitElement {
   decide(e, type) {
     if (this.isEditing) {
       // var edit_index = sessionStorage.getItem("edit_index");
-      switch(type){
-        case "name":{
-          this.editData.Name = e.target.value;
-          this.validate(e, type);
-        }
-        break;
-        case "state": {
-          this.editData.State = e.target.value;
-          this.validate(e, type);
-          
-        }
-        break;
-  
+      switch (type) {
+        case "name":
+          {
+            this.editData.Name = e.target.value;
+            this.validate(e, type);
+          }
+          break;
+        case "state":
+          {
+            this.editData.State = e.target.value;
+            this.validate(e, type);
+          }
+          break;
+
         case "line2":
           {
             this.editData.Add_line2 = e.target.value;
@@ -112,97 +114,90 @@ export class Empform extends LitElement {
           }
           break;
 
-          
-  
         case "department":
           {
             this.editData.Department = e.target.value;
             this.validate(e, type);
-            
           }
           break;
-  
+
         case "designation":
           {
             this.editData.Designation = e.target.value;
             this.validate(e, type);
           }
           break;
-  
+
         case "country":
           {
             this.editData.Country = e.target.value;
             this.validate(e, type);
           }
           break;
-  
+
         case "per_email":
           {
             this.editData.Per_email = e.target.value;
             this.validate(e, type);
           }
           break;
-  
+
         case "line1":
           {
             this.editData.Add_line2 = e.target.value;
             this.validate(e, type);
           }
           break;
-  
+
         case "city":
           {
             this.editData.City = e.target.value;
             this.validate(e, type);
           }
           break;
-  
+
         case "pin":
           {
             this.editData.Pincode = e.target.value;
             this.validate(e, type);
           }
           break;
-  
+
         case "landmark":
           {
             this.editData.Landmark = e.target.value;
             this.validate(e, type);
           }
           break;
-  
+
         case "code":
           {
             this.editData.Pincode = e.target.value;
             this.validate(e, type);
           }
           break;
-  
+
         case "email":
           {
             this.editData.Email = e.target.value;
             this.validate(e, type);
           }
           break;
-  
+
         case "phone":
           {
             this.editData.Phone = e.target.value;
             this.validate(e, type);
           }
           break;
-  
+
         case "sec_phone":
           {
             this.editData.Sec_phone = e.target.value;
             this.validate(e, type);
           }
           break;
-        
-
-         
       }
-     
     } else {
       this.validate(e, type);
       console.log("main");
@@ -212,12 +207,11 @@ export class Empform extends LitElement {
   cancel_edit() {
     window.location.reload();
   }
-  submit_edit(e){
+  submit_edit(e) {
     e.preventDefault();
-    
 
-    if(
-      this.employee.name.errorMessage ==='' &&
+    if (
+      this.employee.name.errorMessage === "" &&
       this.employee.emp_code.errorMessage === "" &&
       this.employee.email.errorMessage === "" &&
       this.employee.per_email.errorMessage === "" &&
@@ -230,62 +224,57 @@ export class Empform extends LitElement {
       this.employee.landmark.errorMessage === "" &&
       this.employee.state.errorMessage === "" &&
       this.employee.country.errorMessage === "" &&
-      this.employee.pincode.errorMessage === "")
-      {
-        console.log("in submit edit")
-        console.log(this.data)
-        localStorage.setItem("Form_Data", JSON.stringify(this.data));
-        window.location.reload();
-
+      this.employee.pincode.errorMessage === ""
+    ) {
+      console.log("in submit edit");
+      console.log(this.data);
+      localStorage.setItem("Form_Data", JSON.stringify(this.data));
+      window.location.reload();
     }
-    
   }
-
 
   render() {
     return html`
     <div class="head">
+     
+      
+   
+
+
     <form class="form">
+    
       <div class="container">
         <header class="heading">
           <h1 id="heading">Registration Form</h1> 
        </header>
+       
         <div class="input_field"  id="name">
-            <label class="inp_lable">Name:</label>
-          <input
-            type="text"
-            id="f_name"
-            @input=${(e) => this.decide(e, "name")}
-          /><span>${this.employee.name.errorMessage}</span>
+        <sl-input label="Name"  id="f_name" @input=${(e) =>
+          this.decide(e, "name")}></sl-input><span>${
+      this.employee.name.errorMessage
+    }</span>
+            
         </div>
 
 
         <div class="input_field" id="emp_code">
-        <label class="inp_lable">Employee Code:</label>
-          <input
-            type="text"
-            id="f_code"
-            @input=${(e) => this.validate(e, "code")}
-          /><span>${this.employee.emp_code?.errorMessage}</span>
+        <sl-input label="Employee Code:"  id="f_code" @input=${(e) =>
+          this.validate(e, "code")}></sl-input>
+       <span>${this.employee.emp_code?.errorMessage}</span>
         </div>
  
         <div class="email">
         <div class="input_field" id="email_office">
-        <label class="inp_lable">Office Email:</label>
-          <input
-            type="email"
-            id="f_email"
-            @input=${(e) => this.validate(e, "email")}
-          /><span>${this.employee.email?.errorMessage}</span>
+        <sl-input label="Office Email:"  id="f_email" @input=${(e) =>
+          this.validate(e, "email")}></sl-input>
+        <span>${this.employee.email?.errorMessage}</span>
+        
         </div>
+
         <div class="input_field" id="email_personal">
-    <label class="inp_lable">Personal Email:</label>
-          <input
-          
-           id="f_peremail"
-            @input=${(e) => this.validate(e, "per_email")}
-          /><span>${this.employee.per_email?.errorMessage}</span>
-            
+        <sl-input label="Personal Email:"  id="f_peremail" @input=${(e) =>
+          this.validate(e, "per_email")}></sl-input>
+        <span>${this.employee.per_email?.errorMessage}</span>
         </div>
             
         </div>
@@ -293,6 +282,8 @@ export class Empform extends LitElement {
         
 
         <div class="input_field" id="department">
+          
+          
         <label class="inp_lable">Department:</label>
           
             <input list="dep_ch" placeholder="Choose Department"id="f_dep" name="myBrowser" @input=${(
@@ -332,16 +323,14 @@ export class Empform extends LitElement {
       
     <div class="phone_div">
     <div class="input_field" id="contact">
-      <label class="inp_lable">Phone Number:</label>
-         <input type="phone" id="f_phone" @input=${(e) =>
-           this.validate(e, "phone")}>
-        <span>${this.employee.phone?.errorMessage}</span>
+    <sl-input label="Phone Number:"   id="f_phone" @input=${(e) =>
+      this.validate(e, "phone")}></sl-input>
+    <span>${this.employee.phone?.errorMessage}</span>
       </div>
 
       <div class="input_field" id="sec_contact">
-      <label class="inp_lable">Secondary Phone Number:</label>
-         <input type="phone" id="f_secph" placeholder="Optional" @input=${(e) =>
-           this.validate(e, "sec_phone")}>
+      <sl-input label="Secondary Phone Number:"   id="f_secph" @input=${(e) =>
+        this.validate(e, "sec_phone")}></sl-input>
         <span>${this.employee.sec_phone?.errorMessage}</span>
       </div>
 <hr>
@@ -352,39 +341,30 @@ export class Empform extends LitElement {
             <p>Address</p>
 
             <div class="input_add" id="line_1">
-              <label for="line1">Address Line 1:</label>
-              <input type="text" name="line1" id="f_line1" placeholder="House no. , Floor , Street"
-              @input=${(e) => {
-                this.validate(e, "line1");
-              }}>
-              <span>${this.employee.line1?.errorMessage}</span>
+            <sl-input label="Address Line 1:"   id="f_line1" @input=${(e) => {
+              this.validate(e, "line1");
+            }}></sl-input>
+            <span>${this.employee.line1?.errorMessage}</span>
             </div>
 
             <div class="input_add" id="line_2">
-              <label for="line2">Address Line 2:</label>
-              <input type="text" id="f_line2" name="line1" placeholder="Area, Locality" @input=${(
-                e
-              ) => {
-                this.validate(e, "line2");
-              }}>
-              <span>${this.employee.line2?.errorMessage}</span>
+            <sl-input label="Address Line 2:"   id="f_line2" @input=${(e) => {
+              this.validate(e, "line2");
+            }}></sl-input>
+            <span>${this.employee.line2?.errorMessage}</span>
             </div>
 
             <div class="input_add" id="city">
-               <label for="city_name">City:</label>
-              <input type="text" id="f_city" name="city_name" @input=${(e) => {
-                this.validate(e, "city");
-              }}>
-              <span>${this.employee.city?.errorMessage}</span>
+            <sl-input label="City:"   id="f_city" @input=${(e) => {
+              this.validate(e, "city");
+            }}></sl-input>
+            <span>${this.employee.city?.errorMessage}</span>
             </div>
 
             <div class="input_add" id="landmark">
-                <label for="Landmark">Landmark:</label>
-                <input type="text" id="f_landmark" name="Landmark" @input=${(
-                  e
-                ) => {
-                  this.validate(e, "landmark");
-                }}>
+            <sl-input label="City:"  id="f_landmark" @input=${(e) => {
+              this.validate(e, "landmark");
+            }}></sl-input>
                 <span></span> 
             </div>   
 
@@ -424,12 +404,9 @@ export class Empform extends LitElement {
             </div>
 
             <div class="input_add" id="pin" >
-                <label for="pincode">Pincode:</label>
-                <input type="text" id="f_pincode" name="pincode" @input=${(
-                  e
-                ) => {
-                  this.validate(e, "pin");
-                }}>
+            <sl-input label="Pincode:"  id="f_pincode" @input=${(e) => {
+              this.validate(e, "pin");
+            }}></sl-input>
                 <span>${this.employee.pincode?.errorMessage}</span>
             <div>
                 
@@ -443,7 +420,13 @@ export class Empform extends LitElement {
             ? html`<button id="sub_btn" @click=${(e) => this._submit(e)}>
                 Submit
               </button>`
-            : html`<button class="btn" type="submit" @click=${(e) => this.submit_edit(e)}>Update</button>
+            : html`<button
+                  class="btn"
+                  type="submit"
+                  @click=${(e) => this.submit_edit(e)}
+                >
+                  Update
+                </button>
                 <button class="btn" @click=${() => this.cancel_edit()}>
                   Cancel
                 </button>`
@@ -540,20 +523,20 @@ export class Empform extends LitElement {
   _submit(e) {
     e.preventDefault();
     if (
-      this.employee.name.isValidName === true &&
-      this.employee.emp_code.isValidName === true &&
-      this.employee.email.isValidName === true &&
-      this.employee.per_email.isValidName === true &&
-      this.employee.department.isValidName === true &&
-      this.employee.designation.isValidName === true &&
-      this.employee.phone.isValidName === true &&
-      this.employee.line1.isValidName === true &&
-      this.employee.line2.isValidName === true &&
-      this.employee.city.isValidName === true &&
-      this.employee.landmark.isValidName === true &&
-      this.employee.state.isValidName === true &&
-      this.employee.country.isValidName === true &&
-      this.employee.pincode.isValidName === true
+      this.employee.name.isValidName === true
+      // this.employee.emp_code.isValidName === true &&
+      // this.employee.email.isValidName === true &&
+      // this.employee.per_email.isValidName === true &&
+      // this.employee.department.isValidName === true &&
+      // this.employee.designation.isValidName === true &&
+      // this.employee.phone.isValidName === true &&
+      // this.employee.line1.isValidName === true &&
+      // this.employee.line2.isValidName === true &&
+      // this.employee.city.isValidName === true &&
+      // this.employee.landmark.isValidName === true &&
+      // this.employee.state.isValidName === true &&
+      // this.employee.country.isValidName === true &&
+      // this.employee.pincode.isValidName === true
     ) {
       let data = {
         Name: this.employee.name.value,
@@ -574,7 +557,7 @@ export class Empform extends LitElement {
       };
 
       //  localStorage.clear("Form_Data");
-      let olddata = JSON.parse(localStorage.getItem("Form_Data"));
+      let olddata = JSON.parse(localStorage.getItem("Form_Data")) || [];
       // this.full_data.push(olddata);
       olddata.push(data);
 
