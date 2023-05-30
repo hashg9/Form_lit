@@ -187,7 +187,7 @@ export class Table extends LitElement {
                   
                   ${console.log("dialog",this.editData)}
                 
-                    <emp-form isEditing .editData = ${this.editData}>
+                    <emp-form isEditing .editData  = ${this.editData} .data=${this.data}>
                   
                   </emp-form >
                   <button @click=${this.closemodal}>Cancel</button>

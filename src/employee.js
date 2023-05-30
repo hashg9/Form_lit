@@ -15,6 +15,7 @@ export class Empform extends LitElement {
     edited_data: { type: Array },
     isEditing: { type: Boolean },
     editData: { type: Object },
+    data:{type: Object}
   };
 
   constructor() {
@@ -45,8 +46,42 @@ export class Empform extends LitElement {
     if (this.isEditing) {
       console.log("isEditing");
       console.log("from form component", this.editData);
+      console.log(this.data)
 
-      // var name = this.renderRoot.querySelector("#f_name");
+      var name = this.renderRoot.querySelector("#f_name");
+      var emp_code = this.renderRoot.querySelector("#f_code");
+      var email= this.renderRoot.querySelector("#f_email");
+      var per_email = this.renderRoot.querySelector("#f_peremail");
+      var department = this.renderRoot.querySelector("#f_dep");
+      var designation = this.renderRoot.querySelector("#f_des");
+      var phone = this.renderRoot.querySelector("#f_phone");
+      var sec_phone = this.renderRoot.querySelector("#f_secph");
+      var line1 = this.renderRoot.querySelector("#f_line1");
+      var line2 = this.renderRoot.querySelector("#f_line2");
+      var city = this.renderRoot.querySelector("#f_city");
+      var landmark = this.renderRoot.querySelector("#f_landmark");
+      var state = this.renderRoot.querySelector("#f_state");
+      var country = this.renderRoot.querySelector("#f_country");
+      var pincode= this.renderRoot.querySelector("#f_pincode");
+
+      
+      
+      name.value= this.editData.Name
+      emp_code.value= this.editData.Emp_code;
+      email.value = this.editData.Email;
+      per_email.value = this.editData.Per_email;
+      department.value = this.editData.Department;
+      designation.value = this.editData.Designation;
+      phone.value = this.editData.Phone;
+      sec_phone.value = this.editData.Sec_phone;
+      line1.value = this.editData.Add_line1;
+      line2.value = this.editData.Add_line2;
+      city.value = this.editData.City;
+      state.value = this.editData.State;
+      country.value = this.editData.Country;
+      landmark.value = this.editData.Landmark;
+      pincode.value = this.editData.Pincode;
+
 
       // run a function to pre-fill form
     } else {
@@ -56,9 +91,118 @@ export class Empform extends LitElement {
 
   decide(e, type) {
     if (this.isEditing) {
-      var edit_index = sessionStorage.getItem("edit_index");
-      console.log(edit_index);
-      console.log("IN EDDI");
+      // var edit_index = sessionStorage.getItem("edit_index");
+      switch(type){
+        case "name":{
+          this.editData.Name = e.target.value;
+          this.validate(e, type);
+        }
+        break;
+        case "state": {
+          this.editData.State = e.target.value;
+          this.validate(e, type);
+          
+        }
+        break;
+  
+        case "line2":
+          {
+            this.editData.Add_line2 = e.target.value;
+            this.validate(e, type);
+          }
+          break;
+
+          
+  
+        case "department":
+          {
+            this.editData.Department = e.target.value;
+            this.validate(e, type);
+            
+          }
+          break;
+  
+        case "designation":
+          {
+            this.editData.Designation = e.target.value;
+            this.validate(e, type);
+          }
+          break;
+  
+        case "country":
+          {
+            this.editData.Country = e.target.value;
+            this.validate(e, type);
+          }
+          break;
+  
+        case "per_email":
+          {
+            this.editData.Per_email = e.target.value;
+            this.validate(e, type);
+          }
+          break;
+  
+        case "line1":
+          {
+            this.editData.Add_line2 = e.target.value;
+            this.validate(e, type);
+          }
+          break;
+  
+        case "city":
+          {
+            this.editData.City = e.target.value;
+            this.validate(e, type);
+          }
+          break;
+  
+        case "pin":
+          {
+            this.editData.Pincode = e.target.value;
+            this.validate(e, type);
+          }
+          break;
+  
+        case "landmark":
+          {
+            this.editData.Landmark = e.target.value;
+            this.validate(e, type);
+          }
+          break;
+  
+        case "code":
+          {
+            this.editData.Pincode = e.target.value;
+            this.validate(e, type);
+          }
+          break;
+  
+        case "email":
+          {
+            this.editData.Email = e.target.value;
+            this.validate(e, type);
+          }
+          break;
+  
+        case "phone":
+          {
+            this.editData.Phone = e.target.value;
+            this.validate(e, type);
+          }
+          break;
+  
+        case "sec_phone":
+          {
+            this.editData.Sec_phone = e.target.value;
+            this.validate(e, type);
+          }
+          break;
+        
+
+         
+      }
+     
     } else {
       this.validate(e, type);
       console.log("main");
@@ -67,6 +211,34 @@ export class Empform extends LitElement {
 
   cancel_edit() {
     window.location.reload();
+  }
+  submit_edit(e){
+    e.preventDefault();
+    
+
+    if(
+      this.employee.name.errorMessage ==='' &&
+      this.employee.emp_code.errorMessage === "" &&
+      this.employee.email.errorMessage === "" &&
+      this.employee.per_email.errorMessage === "" &&
+      this.employee.department.errorMessage === "" &&
+      this.employee.designation.errorMessage === "" &&
+      this.employee.phone.errorMessage === "" &&
+      this.employee.line1.errorMessage === "" &&
+      this.employee.line2.errorMessage === "" &&
+      this.employee.city.errorMessage === "" &&
+      this.employee.landmark.errorMessage === "" &&
+      this.employee.state.errorMessage === "" &&
+      this.employee.country.errorMessage === "" &&
+      this.employee.pincode.errorMessage === "")
+      {
+        console.log("in submit edit")
+        console.log(this.data)
+        localStorage.setItem("Form_Data", JSON.stringify(this.data));
+        window.location.reload();
+
+    }
+    
   }
 
 
@@ -83,7 +255,7 @@ export class Empform extends LitElement {
           <input
             type="text"
             id="f_name"
-            @input=${(e) => this.validate(e, "name")}
+            @input=${(e) => this.decide(e, "name")}
           /><span>${this.employee.name.errorMessage}</span>
         </div>
 
@@ -271,7 +443,7 @@ export class Empform extends LitElement {
             ? html`<button id="sub_btn" @click=${(e) => this._submit(e)}>
                 Submit
               </button>`
-            : html`<button class="btn" type="submit" @click=${(e) => this._submit(e)}>Update</button>
+            : html`<button class="btn" type="submit" @click=${(e) => this.submit_edit(e)}>Update</button>
                 <button class="btn" @click=${() => this.cancel_edit()}>
                   Cancel
                 </button>`
