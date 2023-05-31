@@ -5,6 +5,7 @@ import "@shoelace-style/shoelace/dist/components/alert/alert.js";
 import "@shoelace-style/shoelace/dist/components/progress-ring/progress-ring.js";
 import "@shoelace-style/shoelace/dist/components/input/input.js";
 import "@shoelace-style/shoelace/dist/themes/light.css";
+import "@shoelace-style/shoelace/dist/components/button/button.js";
 
 export class Empform extends LitElement {
   static properties = {
@@ -417,19 +418,30 @@ export class Empform extends LitElement {
         
         ${
           !this.isEditing
-            ? html`<button id="sub_btn" @click=${(e) => this._submit(e)}>
-                Submit
-              </button>`
-            : html`<button
-                  class="btn"
-                  type="submit"
+            ? html`
+                <div class="submit_div">
+                  <sl-button
+                    variant="primary"
+                    id="submit_btn"
+                    @click=${(e) => this._submit(e)}
+                    >Submit</sl-button
+                  >
+                  <sl-alert variant="success" duration="2000" closable>
+                    <sl-icon slot="icon" name="info-circle"></sl-icon>
+                    Form submitted successfully.
+                  </sl-alert>
+                </div>
+              `
+            : html`
+                <sl-button
+                  variant="primary"
                   @click=${(e) => this.submit_edit(e)}
+                  >Update</sl-button
                 >
-                  Update
-                </button>
-                <button class="btn" @click=${() => this.cancel_edit()}>
-                  Cancel
-                </button>`
+                <sl-button variant="primary" @click=${() => this.cancel_edit()}
+                  >Cancel</sl-button
+                >
+              `
         }
       </div>
 
@@ -489,6 +501,10 @@ export class Empform extends LitElement {
         margin-top: 2rem;
         justify-content: center;
       }
+      .submit_div{
+        display: flex;
+        flex-direction:column;
+      }
       #sub_btn {
         font-weight: bold;
         background-color: #2355b7;
@@ -523,20 +539,20 @@ export class Empform extends LitElement {
   _submit(e) {
     e.preventDefault();
     if (
-      this.employee.name.isValidName === true
-      // this.employee.emp_code.isValidName === true &&
-      // this.employee.email.isValidName === true &&
-      // this.employee.per_email.isValidName === true &&
-      // this.employee.department.isValidName === true &&
-      // this.employee.designation.isValidName === true &&
-      // this.employee.phone.isValidName === true &&
-      // this.employee.line1.isValidName === true &&
-      // this.employee.line2.isValidName === true &&
-      // this.employee.city.isValidName === true &&
-      // this.employee.landmark.isValidName === true &&
-      // this.employee.state.isValidName === true &&
-      // this.employee.country.isValidName === true &&
-      // this.employee.pincode.isValidName === true
+      this.employee.name.isValidName === true &&
+      this.employee.emp_code.isValidName === true &&
+      this.employee.email.isValidName === true &&
+      this.employee.per_email.isValidName === true &&
+      this.employee.department.isValidName === true &&
+      this.employee.designation.isValidName === true &&
+      this.employee.phone.isValidName === true &&
+      this.employee.line1.isValidName === true &&
+      this.employee.line2.isValidName === true &&
+      this.employee.city.isValidName === true &&
+      this.employee.landmark.isValidName === true &&
+      this.employee.state.isValidName === true &&
+      this.employee.country.isValidName === true &&
+      this.employee.pincode.isValidName === true
     ) {
       let data = {
         Name: this.employee.name.value,
@@ -555,6 +571,9 @@ export class Empform extends LitElement {
         Country: this.employee.country.value,
         Pincode: this.employee.pincode.value,
       };
+      var submit_btn = this.renderRoot.querySelector("#submit_btn");
+      submit_btn.innerHTML = "Submitted";
+      submit_btn.variant = "success";
 
       //  localStorage.clear("Form_Data");
       let olddata = JSON.parse(localStorage.getItem("Form_Data")) || [];
@@ -564,9 +583,46 @@ export class Empform extends LitElement {
       localStorage.setItem("Form_Data", JSON.stringify(olddata));
       // let data=JSON.parse(localStorage.getItem("Form_Data"));
       // console.log(data);
+
       const form = this.renderRoot.querySelector("form");
-      form.reset();
-      alert("Submitted");
+      let alert = this.renderRoot.querySelector("sl-alert");
+      alert.variant="success"
+      alert.innerHTML="Form Submitted Successfully"
+      alert.show();
+      setTimeout(() => {
+        const form = this.renderRoot.querySelector("form");
+        var submit_btn = this.renderRoot.querySelector("#submit_btn");
+
+        submit_btn.variant = "primary";
+        submit_btn.innerHTML = "Submit";
+        form.reset();
+      }, "2000");
+    }else if( 
+      this.employee.name.value == "" &&
+      this.employee.emp_code.value == "" &&
+      this.employee.email.value == "" &&
+      this.employee.per_email.value == "" &&
+      this.employee.department.value == "" &&
+      this.employee.designation.value === "" &&
+      this.employee.phone.value == "" &&
+      this.employee.line1.value ==  "" &&
+      this.employee.line2.value ==  "" &&
+      this.employee.city.value == "" &&
+      this.employee.landmark.value == "" &&
+      this.employee.state.value == "" &&
+      this.employee.country.value ==  "" &&
+      this.employee.pincode.value == ""){
+      
+      let alert = this.renderRoot.querySelector("sl-alert");
+      alert.variant="danger"
+      alert.innerHTML = "Fill all the fields correctly";
+      alert.show();
+    }else{
+      let alert = this.renderRoot.querySelector("sl-alert");
+      alert.variant="danger"
+      alert.innerHTML = "Fill all the fields correctly";
+      alert.show();
+
     }
   }
 
