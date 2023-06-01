@@ -269,6 +269,7 @@ export class Table extends LitElement {
   }
 
   edit(index) {
+    console.log("data",this.data)
     
     const items = this.data[index];
     this.editData = items;
@@ -290,32 +291,32 @@ export class Table extends LitElement {
     this.editData=undefined;
     window.location.reload();
   }
-  savechanges() {
-    var new_data = this.data[this.on_index];
+  // savechanges() {
+  //   var new_data = this.data[this.on_index];
 
-    new_data.Name = this.renderRoot.querySelector("#e_name").value;
-    new_data.Emp_code = this.renderRoot.querySelector("#e_code").value;
-    new_data.Email = this.renderRoot.querySelector("#e_email").value;
-    new_data.Per_email = this.renderRoot.querySelector("#e_pemail").value;
-    new_data.Department = this.renderRoot.querySelector("#e_department").value;
-    new_data.Designation =
-      this.renderRoot.querySelector("#e_designation").value;
-    new_data.Phone = this.renderRoot.querySelector("#e_phone").value;
-    new_data.Sec_phone = this.renderRoot.querySelector("#e_perphone").value;
-    new_data.Add_line1 = this.renderRoot.querySelector("#e_line1").value;
-    new_data.Add_line2 = this.renderRoot.querySelector("#e_line2").value;
-    new_data.Landmark = this.renderRoot.querySelector("#e_landmark").value;
-    new_data.City = this.renderRoot.querySelector("#e_city").value;
-    new_data.State = this.renderRoot.querySelector("#e_state").value;
-    new_data.Country = this.renderRoot.querySelector("#e_country").value;
-    new_data.Pincode = this.renderRoot.querySelector("#e_pincode").value;
+  //   new_data.Name = this.renderRoot.querySelector("#e_name").value;
+  //   new_data.Emp_code = this.renderRoot.querySelector("#e_code").value;
+  //   new_data.Email = this.renderRoot.querySelector("#e_email").value;
+  //   new_data.Per_email = this.renderRoot.querySelector("#e_pemail").value;
+  //   new_data.Department = this.renderRoot.querySelector("#e_department").value;
+  //   new_data.Designation =
+  //     this.renderRoot.querySelector("#e_designation").value;
+  //   new_data.Phone = this.renderRoot.querySelector("#e_phone").value;
+  //   new_data.Sec_phone = this.renderRoot.querySelector("#e_perphone").value;
+  //   new_data.Add_line1 = this.renderRoot.querySelector("#e_line1").value;
+  //   new_data.Add_line2 = this.renderRoot.querySelector("#e_line2").value;
+  //   new_data.Landmark = this.renderRoot.querySelector("#e_landmark").value;
+  //   new_data.City = this.renderRoot.querySelector("#e_city").value;
+  //   new_data.State = this.renderRoot.querySelector("#e_state").value;
+  //   new_data.Country = this.renderRoot.querySelector("#e_country").value;
+  //   new_data.Pincode = this.renderRoot.querySelector("#e_pincode").value;
 
-    localStorage.setItem("Form_Data", JSON.stringify(this.data));
-    var show1 = this.renderRoot.querySelector("#Form");
+  //   localStorage.setItem("Form_Data", JSON.stringify(this.data));
+  //   var show1 = this.renderRoot.querySelector("#Form");
 
-    show1.classList.add("edit_form");
-    this.requestUpdate();
-  }
+  //   show1.classList.add("edit_form");
+  //   this.requestUpdate();
+  // }
 
   delete(index) {
     //  this.full_data= JSON.parse(localStorage.getItem("Form_Data"));

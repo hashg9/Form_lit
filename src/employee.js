@@ -1,11 +1,16 @@
 import { LitElement, css, html } from "lit";
 import { department, designation, country, state } from "./data";
 import { repeat } from "lit/directives/repeat.js";
+
 import "@shoelace-style/shoelace/dist/components/alert/alert.js";
 import "@shoelace-style/shoelace/dist/components/progress-ring/progress-ring.js";
 import "@shoelace-style/shoelace/dist/components/input/input.js";
 import "@shoelace-style/shoelace/dist/themes/light.css";
 import "@shoelace-style/shoelace/dist/components/button/button.js";
+import "@shoelace-style/shoelace/dist/components/select/select.js";
+import "@shoelace-style/shoelace/dist/components/option/option.js";
+import "@shoelace-style/shoelace/dist/components/tooltip/tooltip.js";
+
 
 export class Empform extends LitElement {
   static properties = {
@@ -94,6 +99,7 @@ export class Empform extends LitElement {
   decide(e, type) {
     if (this.isEditing) {
       // var edit_index = sessionStorage.getItem("edit_index");
+
       switch (type) {
         case "name":
           {
@@ -117,6 +123,7 @@ export class Empform extends LitElement {
 
         case "department":
           {
+            console.log("depar");
             this.editData.Department = e.target.value;
             this.validate(e, type);
           }
@@ -124,6 +131,7 @@ export class Empform extends LitElement {
 
         case "designation":
           {
+            console.log("depar");
             this.editData.Designation = e.target.value;
             this.validate(e, type);
           }
@@ -173,7 +181,7 @@ export class Empform extends LitElement {
 
         case "code":
           {
-            this.editData.Pincode = e.target.value;
+            this.editData.Emp_code = e.target.value;
             this.validate(e, type);
           }
           break;
@@ -234,10 +242,52 @@ export class Empform extends LitElement {
     }
   }
 
+  showPart(partNumber) {
+    // Hide all parts initially
+    const part1 = this.shadowRoot.getElementById("part1");
+    const part2 = this.shadowRoot.getElementById("part2");
+    const part3 = this.shadowRoot.getElementById("part3");
+    part1.style.display = "none";
+    part2.style.display = "none";
+    part3.style.display = "none";
+
+    // Show the selected part
+    if (partNumber === 1) {
+      part1.style.display = "block";
+    } else if (partNumber === 2) {
+      part2.style.display = "block";
+    } else if (partNumber === 3) {
+      part3.style.display = "block";
+    }
+  }
+
   render() {
     return html`
     <div class="head">
-     
+     <div id="navigator">
+    ${
+      !this.isEditing
+        ? html`
+            <div id="tablepage_btn">
+              <sl-button
+                class="tomato-button"
+                @click=${() => (window.location.href = "_table.html")}
+                >Employee Data</sl-button
+              >
+            </div>
+          `
+        : html`
+            <div>
+              <sl-button
+                class="tomato-button"
+                @click=${() => (window.location.href = "_table.html")}
+                >Cancel Edit</sl-button
+              >
+            </div>
+          `
+    }
+      
+     </div>
       
    
 
@@ -245,36 +295,60 @@ export class Empform extends LitElement {
     <form class="form">
     
       <div class="container">
+        <div class="parts" id="part1" >
+          
+        
         <header class="heading">
           <h1 id="heading">Registration Form</h1> 
        </header>
        
         <div class="input_field"  id="name">
-        <sl-input label="Name"  id="f_name" @input=${(e) =>
+        <sl-tooltip content="Enter Name" placement="right" hoist>
+        <sl-input required label="Name" size="small" id="f_name" @input=${(e) =>
           this.decide(e, "name")}></sl-input><span>${
       this.employee.name.errorMessage
     }</span>
+    
+  </sl-tooltip>
+
+
+        
             
         </div>
 
 
         <div class="input_field" id="emp_code">
-        <sl-input label="Employee Code:"  id="f_code" @input=${(e) =>
-          this.validate(e, "code")}></sl-input>
+        <sl-tooltip content="Enter 4 digit employee code" placement="right" hoist>
+        <sl-input required label="Employee Code:" size="small"  id="f_code" @input=${(
+          e
+        ) => this.decide(e, "code")}></sl-input>
+        </sl-tooltip>
+
+        
        <span>${this.employee.emp_code?.errorMessage}</span>
         </div>
  
         <div class="email">
         <div class="input_field" id="email_office">
-        <sl-input label="Office Email:"  id="f_email" @input=${(e) =>
-          this.validate(e, "email")}></sl-input>
+        <sl-tooltip content="Domain name should be (@annalect.com)" placement="right" hoist>
+        <sl-input required label="Office Email:" size="small" id="f_email" @input=${(
+          e
+        ) => this.decide(e, "email")}></sl-input>
+        </sl-tooltip> 
+
+        
         <span>${this.employee.email?.errorMessage}</span>
         
         </div>
 
         <div class="input_field" id="email_personal">
-        <sl-input label="Personal Email:"  id="f_peremail" @input=${(e) =>
-          this.validate(e, "per_email")}></sl-input>
+
+        <sl-tooltip content="Domain name should be (@gamil.com)" placement="right" hoist>
+        <sl-input required label="Personal Email:" size="small" id="f_peremail" @input=${(
+          e
+        ) => this.decide(e, "per_email")}></sl-input>
+        </sl-tooltip>
+        
         <span>${this.employee.per_email?.errorMessage}</span>
         </div>
             
@@ -286,19 +360,28 @@ export class Empform extends LitElement {
           
           
         <label class="inp_lable">Department:</label>
-          
-            <input list="dep_ch" placeholder="Choose Department"id="f_dep" name="myBrowser" @input=${(
-              e
-            ) => {
-              this.validate(e, "department");
-            }}/>
-            <datalist id="dep_ch">
+
+        <sl-tooltip content="Select Department" placement="right" hoist>
+        <sl-select required id="f_dep" size="small" @input=${(e) => {
+          this.decide(e, "department");
+        }}>
             ${repeat(
               department,
-              (items) => html` <option>${items.department}</option> `
+              (items) =>
+                html`
+                  <sl-option value=${items.department}
+                    >${items.department}
+                  </sl-option>
+                `
             )}
-                <span>${this.employee.department?.errorMessage}</span>
-          </datalist>
+  
+  
+        </sl-select>
+        </sl-tooltip>
+        
+<span>${this.employee.department?.errorMessage}</span>
+          
+            
         </div>  
           
   
@@ -307,109 +390,199 @@ export class Empform extends LitElement {
       <div class="input_field" id="designation">
       <label class="inp_lable">Designation:</label>
 
-      
-            <input list="des_ch" id="f_des" placeholder="Choose Designation" @input=${(
-              e
-            ) => {
-              this.validate(e, "designation");
-            }}/>
-            <datalist id="des_ch">
+      <sl-tooltip content="Select Designation" placement="right" hoist>
+      <sl-select  id="f_dep" size="small" @input=${(e) => {
+        this.decide(e, "designation");
+      }}>
             ${repeat(
               designation,
-              (items) => html`<option>${items.designation}</option>`
-            )}    
-            
-          </datalist>
+              (items) =>
+                html`
+                  <sl-option value=${items.designation}
+                    >${items.designation}
+                  </sl-option>
+                `
+            )}
+      </sl-tooltip>
+      
       </div>
+
+      <div >
+            <sl-button
+            
+              variant="primary"
+              id="next_btn_1"
+              @click=${() => this.showPart(2)}
+              >Next</sl-button
+            >
+          </div>
+      </div>
+
+      <div class="part" id="part2" style="display:none;">
+        
+      
       
     <div class="phone_div">
     <div class="input_field" id="contact">
-    <sl-input label="Phone Number:"   id="f_phone" @input=${(e) =>
-      this.validate(e, "phone")}></sl-input>
+
+    <sl-tooltip content="Enter phone number" placement="right" hoist>
+    <sl-input label="Phone Number:"  size="small" id="f_phone" @input=${(e) =>
+      this.decide(e, "phone")}></sl-input>
+    </sl-tooltip>
+    
     <span>${this.employee.phone?.errorMessage}</span>
       </div>
 
       <div class="input_field" id="sec_contact">
-      <sl-input label="Secondary Phone Number:"   id="f_secph" @input=${(e) =>
-        this.validate(e, "sec_phone")}></sl-input>
+
+      <sl-tooltip content="Enter secondary phone number" placement="right" hoist>
+      <sl-input label="Secondary Phone Number:"  size="small" id="f_secph" @input=${(
+        e
+      ) => this.decide(e, "sec_phone")}></sl-input>
+      </sl-tooltip>
+      
         <span>${this.employee.sec_phone?.errorMessage}</span>
       </div>
 <hr>
         
     </div>
+    <div class="btn">
+              <sl-button
+                variant="primary"
+                id="next_btn_2"
+                @click=${() => this.showPart(3)}
+                >Next</sl-button
+              >
+              <sl-button
+                variant="secondary"
+                id="prev_btn_2"
+                @click=${() => this.showPart(1)}
+                >Previous</sl-button
+              >
+            </div>
+    </div>
       
+    <div class="part" id="part3" style="display:none;">
+      
+    
       <div class= "address_div">
-            <p>Address</p>
+            
 
             <div class="input_add" id="line_1">
-            <sl-input label="Address Line 1:"   id="f_line1" @input=${(e) => {
-              this.validate(e, "line1");
+
+            <sl-tooltip content="House no. ,floor" placement="right" hoist>
+            <sl-input label="Address Line 1:" size="small"  id="f_line1" @input=${(
+              e
+            ) => {
+              this.decide(e, "line1");
             }}></sl-input>
+            </sl-tooltip>
+            
             <span>${this.employee.line1?.errorMessage}</span>
             </div>
 
             <div class="input_add" id="line_2">
-            <sl-input label="Address Line 2:"   id="f_line2" @input=${(e) => {
-              this.validate(e, "line2");
+
+            <sl-tooltip content="Area, locality" placement="right" hoist>
+            <sl-input label="Address Line 2:" size="small"  id="f_line2" @input=${(
+              e
+            ) => {
+              this.decide(e, "line2");
             }}></sl-input>
+            </sl-tooltip>
+            
             <span>${this.employee.line2?.errorMessage}</span>
             </div>
 
             <div class="input_add" id="city">
-            <sl-input label="City:"   id="f_city" @input=${(e) => {
-              this.validate(e, "city");
+
+            <sl-tooltip content="Enter city name" placement="right" hoist>
+            <sl-input label="City:" size="small"  id="f_city" @input=${(e) => {
+              this.decide(e, "city");
             }}></sl-input>
+            </sl-tooltip>
+            
             <span>${this.employee.city?.errorMessage}</span>
             </div>
 
             <div class="input_add" id="landmark">
-            <sl-input label="City:"  id="f_landmark" @input=${(e) => {
-              this.validate(e, "landmark");
+
+            <sl-tooltip content="Enter Landmark" placement="right" hoist>
+            <sl-input label="Landmark:" size="small"  id="f_landmark" @input=${(
+              e
+            ) => {
+              this.decide(e, "landmark");
             }}></sl-input>
+    
+            </sl-tooltip>
+            
                 <span></span> 
             </div>   
 
             <div class="input_add"  id="state">
                 <label for="state">State:</label>
-               
-                <input list="state_ch" id="f_state" placeholder="Choose State" @input=${(
-                  e
-                ) => {
-                  this.validate(e, "state");
-                }}/>
-            <datalist id="state_ch">
+
+                <sl-tooltip content="Select state" placement="right" hoist>
+                <sl-select  id="f_dep" size="small" @input=${(e) => {
+                  this.decide(e, "state");
+                }}>
             ${repeat(
               state,
-              (items) => html`<option>${items.state}</option>`
-            )}    
-            
-          </datalist>
+              (items) =>
+                html`
+                  <sl-option value=${items.state}>${items.state} </sl-option>
+                `
+            )}
+                </sl-tooltip>
+               
+                
                 <span>${this.employee.state?.errorMessage}</span>
             </div>
 
             <div class="input_add" id="country">
                 <label for="country">Country:</label>
-                <input list="country_ch" id="f_country" placeholder="Choose State" @input=${(
-                  e
-                ) => {
-                  this.validate(e, "country");
-                }} />
-            <datalist id="country_ch">
+
+                <sl-tooltip content="Select country" placement="right" hoist>
+                <sl-select size="small" id="f_dep"  @input=${(e) => {
+                  this.decide(e, "country");
+                }}>
             ${repeat(
               country,
-              (items) => html`<option>${items.country}</option>`
-            )}    
-            
-          </datalist>
+              (items) =>
+                html`
+                  <sl-option value=${items.country}
+                    >${items.country}
+                  </sl-option>
+                `
+            )}
+                </sl-tooltip>
+               
                 <span>${this.employee.country?.errorMessage}</span>
             </div>
 
             <div class="input_add" id="pin" >
-            <sl-input label="Pincode:"  id="f_pincode" @input=${(e) => {
-              this.validate(e, "pin");
+
+            <sl-tooltip content="Enter pincode" placement="right" hoist>
+            <sl-input label="Pincode:" size="small" id="f_pincode" @input=${(
+              e
+            ) => {
+              this.decide(e, "pin");
             }}></sl-input>
                 <span>${this.employee.pincode?.errorMessage}</span>
+
+    
+            </sl-tooltip>
+           
             <div>
+              <div class="submit_div">
+              <sl-button
+                variant="secondary"
+                id="prev_btn_3"
+                @click=${() => this.showPart(2)}
+                >Previous</sl-button
+              >
+                
+              </div>
                 
             
         
@@ -444,6 +617,7 @@ export class Empform extends LitElement {
               `
         }
       </div>
+      </div>
 
        
             </form>
@@ -459,8 +633,65 @@ export class Empform extends LitElement {
       * {
         font-family: "Lato", sans-serif;
       }
+      sl-input {
+        margin-bottom: 10px;
+        width:25rem;
+      }
+      sl-select {
+        margin-bottom: 10px;
+      }
+      .head {
+        display: flex;
+        flex-direction: row;
+      }
 
-      span {
+      .form {
+        box-shadow: 0 0 10px rgba(300, 300, 300, 0.4);
+        background: white;
+        padding: 15px;
+        display: flex;
+        width: 30rem;
+        height: 37rem;
+        justify-content: center;
+        margin-left: 5px;
+        border-radius: 10px;
+      }
+
+      #navigator {
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+        background: white;
+        display: flex;
+        flex-direction: column;
+        margin-right: 5px;
+        width: 15rem;
+        height: 37rem;
+        padding: 15px;
+        align-items: center;
+        border-radius: 10px;
+      }
+
+      .tomato-button::part(base) {
+        background-color: var(--sl-color-neutral-0);
+        border: solid 1px tomato;
+      }
+
+      .tomato-button::part(base):hover {
+        background-color: rgba(255, 99, 71, 0.1);
+      }
+
+      .tomato-button::part(base):active {
+        background-color: rgba(255, 99, 71, 0.2);
+      }
+
+      .tomato-button::part(base):focus-visible {
+        box-shadow: 0 0 0 3px rgba(255, 99, 71, 0.33);
+      }
+
+      .tomato-button::part(label) {
+        color: tomato;
+      }
+
+      /* span {
         color: red;
         width: 200px;
       }
@@ -532,27 +763,27 @@ export class Empform extends LitElement {
         background-color: white;
         animation: pulse 1s;
         transition: 0.2s;
-      }
+      } */
     `;
   }
 
   _submit(e) {
     e.preventDefault();
     if (
-      this.employee.name.isValidName === true &&
-      this.employee.emp_code.isValidName === true &&
-      this.employee.email.isValidName === true &&
-      this.employee.per_email.isValidName === true &&
-      this.employee.department.isValidName === true &&
-      this.employee.designation.isValidName === true &&
-      this.employee.phone.isValidName === true &&
-      this.employee.line1.isValidName === true &&
-      this.employee.line2.isValidName === true &&
-      this.employee.city.isValidName === true &&
-      this.employee.landmark.isValidName === true &&
-      this.employee.state.isValidName === true &&
-      this.employee.country.isValidName === true &&
-      this.employee.pincode.isValidName === true
+      this.employee.name.isValidName === true
+      // this.employee.emp_code.isValidName === true &&
+      // this.employee.email.isValidName === true &&
+      // this.employee.per_email.isValidName === true &&
+      // this.employee.department.isValidName === true &&
+      // this.employee.designation.isValidName === true &&
+      // this.employee.phone.isValidName === true &&
+      // this.employee.line1.isValidName === true &&
+      // this.employee.line2.isValidName === true &&
+      // this.employee.city.isValidName === true &&
+      // this.employee.landmark.isValidName === true &&
+      // this.employee.state.isValidName === true &&
+      // this.employee.country.isValidName === true &&
+      //   this.employee.pincode.isValidName === true
     ) {
       let data = {
         Name: this.employee.name.value,
@@ -586,8 +817,8 @@ export class Empform extends LitElement {
 
       const form = this.renderRoot.querySelector("form");
       let alert = this.renderRoot.querySelector("sl-alert");
-      alert.variant="success"
-      alert.innerHTML="Form Submitted Successfully"
+      alert.variant = "success";
+      alert.innerHTML = "Form Submitted Successfully";
       alert.show();
       setTimeout(() => {
         const form = this.renderRoot.querySelector("form");
@@ -597,7 +828,7 @@ export class Empform extends LitElement {
         submit_btn.innerHTML = "Submit";
         form.reset();
       }, "2000");
-    }else if( 
+    } else if (
       this.employee.name.value == "" &&
       this.employee.emp_code.value == "" &&
       this.employee.email.value == "" &&
@@ -605,24 +836,23 @@ export class Empform extends LitElement {
       this.employee.department.value == "" &&
       this.employee.designation.value === "" &&
       this.employee.phone.value == "" &&
-      this.employee.line1.value ==  "" &&
-      this.employee.line2.value ==  "" &&
+      this.employee.line1.value == "" &&
+      this.employee.line2.value == "" &&
       this.employee.city.value == "" &&
       this.employee.landmark.value == "" &&
       this.employee.state.value == "" &&
-      this.employee.country.value ==  "" &&
-      this.employee.pincode.value == ""){
-      
+      this.employee.country.value == "" &&
+      this.employee.pincode.value == ""
+    ) {
       let alert = this.renderRoot.querySelector("sl-alert");
-      alert.variant="danger"
+      alert.variant = "danger";
       alert.innerHTML = "Fill all the fields correctly";
       alert.show();
-    }else{
+    } else {
       let alert = this.renderRoot.querySelector("sl-alert");
-      alert.variant="danger"
+      alert.variant = "danger";
       alert.innerHTML = "Fill all the fields correctly";
       alert.show();
-
     }
   }
 

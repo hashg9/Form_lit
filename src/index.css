@@ -7,20 +7,19 @@
   font-family: 'Lato', sans-serif;
 }
 .container{
-  background:linear-gradient(90deg,#c7dbff,#008b80);
-  width: auto;
-  height: auto;
+  
+  background-image: url("https://static.vecteezy.com/system/resources/previews/006/852/804/original/abstract-blue-background-simple-design-for-your-website-free-vector.jpg");
+
+  /* position: fixed; */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   display: flex;
+  /* flex-direction: row; */
   justify-content: center;
-  align-items: center;
+align-items: center;
+/* flex-wrap: wrap; */
   
 }
 
-#heading{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-bottom: 2rem;
-  color: black ;
-  text-shadow: 0 0 2px black;
-}
