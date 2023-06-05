@@ -11,6 +11,13 @@ import "@shoelace-style/shoelace/dist/components/select/select.js";
 import "@shoelace-style/shoelace/dist/components/option/option.js";
 import "@shoelace-style/shoelace/dist/components/tooltip/tooltip.js";
 
+import "@shoelace-style/shoelace/dist/components/progress-ring/progress-ring.js";
+// import 'https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.4.0/dist/components/icon/icon.js';
+// import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+
+
+ 
 
 export class Empform extends LitElement {
   static properties = {
@@ -26,6 +33,8 @@ export class Empform extends LitElement {
     isEditing: { type: Boolean },
     editData: { type: Object },
     data: { type: Object },
+    progress_value: { type: Number },
+    progress_text: { type: String },
   };
 
   constructor() {
@@ -35,21 +44,23 @@ export class Empform extends LitElement {
       emp_code: { value: "", isValidName: false, errorMessage: "" },
       email: { value: "", isValidName: false, errorMessage: "" },
       phone: { value: "", isValidName: false, errorMessage: "" },
-      sec_phone: { value: "", isValidName: true, errorMessage: "" },
+      sec_phone: { value: "", isValidName: false, errorMessage: "" },
       line1: { value: "", isValidName: false, errorMessage: "" },
       line2: { value: "", isValidName: true, errorMessage: "" },
       city: { value: "", isValidName: false, errorMessage: "" },
       landmark: { value: "", isValidName: false, errorMessage: "" },
       country: { value: "", isValidName: false, errorMessage: "" },
-      pincode: { value: "", isValidName: true, errorMessage: "" },
+      pincode: { value: "", isValidName: false, errorMessage: "" },
       department: { value: "", isValidName: false, errorMessage: "" },
       designation: { value: "", isValidName: false, errorMessage: "" },
-      state: { value: "", isValidName: true, errorMessage: "" },
+      state: { value: "", isValidName: false, errorMessage: "" },
       per_email: { value: "", isValidName: false, errorMessage: "" },
     };
 
     this.format = [];
     this.isEditing = false;
+    this.progress_value = 0;
+    this.progress_text = "Progress";
   }
 
   firstUpdated() {
@@ -62,31 +73,67 @@ export class Empform extends LitElement {
       var emp_code = this.renderRoot.querySelector("#f_code");
       var email = this.renderRoot.querySelector("#f_email");
       var per_email = this.renderRoot.querySelector("#f_peremail");
-      var department = this.renderRoot.querySelector("#f_dep");
-      var designation = this.renderRoot.querySelector("#f_des");
+      var dep = this.renderRoot.querySelector("#f_dep");
+      var des = this.renderRoot.querySelector("#f_des");
       var phone = this.renderRoot.querySelector("#f_phone");
       var sec_phone = this.renderRoot.querySelector("#f_secph");
       var line1 = this.renderRoot.querySelector("#f_line1");
       var line2 = this.renderRoot.querySelector("#f_line2");
       var city = this.renderRoot.querySelector("#f_city");
-      var landmark = this.renderRoot.querySelector("#f_landmark");
-      var state = this.renderRoot.querySelector("#f_state");
-      var country = this.renderRoot.querySelector("#f_country");
+      var landmark = this.renderRoot.querySelector("#f_mark");
+      var st = this.renderRoot.querySelector("#f_state");
+      var co = this.renderRoot.querySelector("#f_country");
       var pincode = this.renderRoot.querySelector("#f_pincode");
 
       name.value = this.editData.Name;
       emp_code.value = this.editData.Emp_code;
       email.value = this.editData.Email;
       per_email.value = this.editData.Per_email;
-      department.value = this.editData.Department;
-      designation.value = this.editData.Designation;
+      for (let i = 0; i < department.length; i++) {
+        
+        if (department[i].key ==  this.editData.Department) {
+            console.log("in for loop if",department[i].value,dep.value)
+          // Return the corresponding value
+          dep.placeholder= department[i].value;
+          console.log(dep.value);
+        }
+      }
+      for (let i = 0; i < designation.length; i++) {
+        
+        if (designation[i].key ==  this.editData.Designation) {
+            
+          // Return the corresponding value
+          des.placeholder= designation[i].value;
+          
+        }
+      }
+      // department.value = this.editData.Department;
+      // designation.value = this.editData.Designation;
       phone.value = this.editData.Phone;
       sec_phone.value = this.editData.Sec_phone;
       line1.value = this.editData.Add_line1;
       line2.value = this.editData.Add_line2;
       city.value = this.editData.City;
-      state.value = this.editData.State;
-      country.value = this.editData.Country;
+      for (let i = 0; i < state.length; i++) {
+        
+        if (state[i].key ==  this.editData.State) {
+            
+          // Return the corresponding value
+          st.placeholder= state[i].value;
+          
+        }
+      }
+      // state.value = this.editData.State;
+      // country.value = this.editData.Country;
+      for (let i = 0; i < country.length; i++) {
+        
+        if (country[i].key ==  this.editData.Country) {
+            
+          // Return the corresponding value
+          co.placeholder= state[i].value;
+          
+        }
+      }
       landmark.value = this.editData.Landmark;
       pincode.value = this.editData.Pincode;
 
@@ -153,7 +200,7 @@ export class Empform extends LitElement {
 
         case "line1":
           {
-            this.editData.Add_line2 = e.target.value;
+            this.editData.Add_line1 = e.target.value;
             this.validate(e, type);
           }
           break;
@@ -235,10 +282,14 @@ export class Empform extends LitElement {
       this.employee.country.errorMessage === "" &&
       this.employee.pincode.errorMessage === ""
     ) {
+      var alert = this.renderRoot.querySelector("#update_alert");
       console.log("in submit edit");
       console.log(this.data);
       localStorage.setItem("Form_Data", JSON.stringify(this.data));
-      window.location.reload();
+      alert.show();
+      setTimeout(() => {
+        window.location.reload();
+      }, "2000");
     }
   }
 
@@ -253,41 +304,54 @@ export class Empform extends LitElement {
 
     // Show the selected part
     if (partNumber === 1) {
+      this.progress_value = 0;
       part1.style.display = "block";
     } else if (partNumber === 2) {
       part2.style.display = "block";
+      this.progress_value = 33.33;
     } else if (partNumber === 3) {
       part3.style.display = "block";
+      this.progress_value = 66.66;
     }
   }
 
   render() {
     return html`
     <div class="head">
-     <div id="navigator">
+     
     ${
       !this.isEditing
         ? html`
-            <div id="tablepage_btn">
-              <sl-button
-                class="tomato-button"
-                @click=${() => (window.location.href = "_table.html")}
-                >Employee Data</sl-button
-              >
+            <div id="navigator">
+              <div id="tablepage_btn">
+                <sl-button
+                  class="tomato-button"
+                  @click=${() => (window.location.href = "_table.html")}
+                  >Employee Data</sl-button
+                >
+                <br />
+                <div class="progress_div">
+                  <sl-progress-ring
+                    value="${this.progress_value}"
+                    class="progress-ring-values"
+                    >${this.progress_text}</sl-progress-ring
+                  >
+                </div>
+              </div>
             </div>
           `
         : html`
-            <div>
+            <!-- <div>
               <sl-button
                 class="tomato-button"
                 @click=${() => (window.location.href = "_table.html")}
                 >Cancel Edit</sl-button
               >
-            </div>
+            </div> -->
           `
     }
       
-     </div>
+    
       
    
 
@@ -295,13 +359,15 @@ export class Empform extends LitElement {
     <form class="form">
     
       <div class="container">
+      
         <div class="parts" id="part1" >
-          
+          <div class="slot_container">
+          <slot id="heading"></slot>
+          </div>
+
         
-        <header class="heading">
-          <h1 id="heading">Registration Form</h1> 
-       </header>
-       
+        
+  
         <div class="input_field"  id="name">
         <sl-tooltip content="Enter Name" placement="right" hoist>
         <sl-input required label="Name" size="small" id="f_name" @input=${(e) =>
@@ -362,20 +428,15 @@ export class Empform extends LitElement {
         <label class="inp_lable">Department:</label>
 
         <sl-tooltip content="Select Department" placement="right" hoist>
-        <sl-select required id="f_dep" size="small" @input=${(e) => {
-          this.decide(e, "department");
-        }}>
+        <sl-select id="f_dep" size="small" 
+        @click=${(e) => this.decide(e, "department")}>
             ${repeat(
               department,
               (items) =>
                 html`
-                  <sl-option value=${items.department}
-                    >${items.department}
-                  </sl-option>
+                  <sl-option value=${items.key}>${items.value} </sl-option>
                 `
             )}
-  
-  
         </sl-select>
         </sl-tooltip>
         
@@ -391,28 +452,27 @@ export class Empform extends LitElement {
       <label class="inp_lable">Designation:</label>
 
       <sl-tooltip content="Select Designation" placement="right" hoist>
-      <sl-select  id="f_dep" size="small" @input=${(e) => {
-        this.decide(e, "designation");
-      }}>
+      <sl-select  id="f_dep" size="small" 
+      @click=${(e) => this.decide(e, "designation")}>                     
             ${repeat(
               designation,
               (items) =>
                 html`
-                  <sl-option value=${items.designation}
-                    >${items.designation}
-                  </sl-option>
+                  <sl-option value=${items.key}>${items.value} </sl-option>
                 `
             )}
+            </sl-select>
       </sl-tooltip>
       
       </div>
 
       <div >
             <sl-button
-            
+              
               variant="primary"
               id="next_btn_1"
               @click=${() => this.showPart(2)}
+              
               >Next</sl-button
             >
           </div>
@@ -448,17 +508,18 @@ export class Empform extends LitElement {
     </div>
     <div class="btn">
               <sl-button
-                variant="primary"
-                id="next_btn_2"
-                @click=${() => this.showPart(3)}
-                >Next</sl-button
-              >
-              <sl-button
                 variant="secondary"
                 id="prev_btn_2"
                 @click=${() => this.showPart(1)}
                 >Previous</sl-button
               >
+              <sl-button
+                variant="primary"
+                id="next_btn_2"
+                @click=${() => this.showPart(3)}
+                >Next</sl-button
+              >
+              
             </div>
     </div>
       
@@ -508,7 +569,7 @@ export class Empform extends LitElement {
             <div class="input_add" id="landmark">
 
             <sl-tooltip content="Enter Landmark" placement="right" hoist>
-            <sl-input label="Landmark:" size="small"  id="f_landmark" @input=${(
+            <sl-input label="Landmark:" size="small"  id="f_mark" @input=${(
               e
             ) => {
               this.decide(e, "landmark");
@@ -523,14 +584,13 @@ export class Empform extends LitElement {
                 <label for="state">State:</label>
 
                 <sl-tooltip content="Select state" placement="right" hoist>
-                <sl-select  id="f_dep" size="small" @input=${(e) => {
-                  this.decide(e, "state");
-                }}>
+                <sl-select  id="f_dep" size="small" @click=${(e) =>
+                  this.decide(e, "state")}>
             ${repeat(
               state,
               (items) =>
                 html`
-                  <sl-option value=${items.state}>${items.state} </sl-option>
+                  <sl-option value=${items.key}>${items.value} </sl-option>
                 `
             )}
                 </sl-tooltip>
@@ -543,9 +603,8 @@ export class Empform extends LitElement {
                 <label for="country">Country:</label>
 
                 <sl-tooltip content="Select country" placement="right" hoist>
-                <sl-select size="small" id="f_dep"  @input=${(e) => {
-                  this.decide(e, "country");
-                }}>
+                <sl-select size="small" id="f_dep"  @click=${(e) =>
+                  this.decide(e, "country")}>
             ${repeat(
               country,
               (items) =>
@@ -573,16 +632,9 @@ export class Empform extends LitElement {
     
             </sl-tooltip>
            
-            <div>
-              <div class="submit_div">
-              <sl-button
-                variant="secondary"
-                id="prev_btn_3"
-                @click=${() => this.showPart(2)}
-                >Previous</sl-button
-              >
-                
-              </div>
+            </div>
+              
+        </div>
                 
             
         
@@ -592,28 +644,60 @@ export class Empform extends LitElement {
         ${
           !this.isEditing
             ? html`
-                <div class="submit_div">
-                  <sl-button
-                    variant="primary"
-                    id="submit_btn"
-                    @click=${(e) => this._submit(e)}
-                    >Submit</sl-button
-                  >
-                  <sl-alert variant="success" duration="2000" closable>
-                    <sl-icon slot="icon" name="info-circle"></sl-icon>
-                    Form submitted successfully.
-                  </sl-alert>
+                <div class="submit_div_a">
+                  <div class="buttons">
+                    <sl-button
+                      variant="secondary"
+                      id="prev_btn_3"
+                      @click=${() => this.showPart(2)}
+                      >Previous</sl-button
+                    >
+                    <sl-button
+                      variant="primary"
+                      id="submit_btn"
+                      @click=${(e) => this._submit(e)}
+                      >Submit</sl-button
+                    >
+                  </div>
+                  <div class="alerts">
+                    <sl-alert variant="success" duration="2000" closable>
+                      Form submitted successfully.
+                    </sl-alert>
+                  </div>
                 </div>
               `
             : html`
-                <sl-button
-                  variant="primary"
-                  @click=${(e) => this.submit_edit(e)}
-                  >Update</sl-button
-                >
-                <sl-button variant="primary" @click=${() => this.cancel_edit()}
-                  >Cancel</sl-button
-                >
+            <div class="footer">
+                <div class="submit_div">
+                  <sl-button
+                    variant="secondary"
+                    id="prev_btn_3"
+                    @click=${() => this.showPart(2)}
+                    >Previous</sl-button
+                  >
+                  <sl-button
+                    variant="primary"
+                    @click=${(e) => this.submit_edit(e)}
+                    >Update</sl-button
+                  >
+                  <sl-button
+                    variant="primary"
+                    @click=${() => this.cancel_edit()}
+                    >Cancel</sl-button
+                  >
+                </div>
+                <div class="alerts">
+                  <sl-alert
+                    id="update_alert"
+                    duration="2000"
+                    closable
+                    variant="neutral"
+                  >
+                    <sl-icon slot="icon" name="gear"></sl-icon>
+                    <strong>Form Updated</strong><br />
+                  </sl-alert>
+                </div>
+        </div>
               `
         }
       </div>
@@ -633,12 +717,41 @@ export class Empform extends LitElement {
       * {
         font-family: "Lato", sans-serif;
       }
+      label {
+        font-weight: bold;
+        font-size: 14px;
+      }
+      slot {
+        margin-bottom: 10px;
+        color: var(--sl-color-primary-900);
+      }
+
       sl-input {
         margin-bottom: 10px;
-        width:25rem;
+        width: 25rem;
       }
+      sl-input::part(form-control-label) {
+        font-weight: bold;
+      }
+      /* sl-input::part(form-control-input){
+        box-shadow:0 0 10px red;
+      } */
       sl-select {
         margin-bottom: 10px;
+      }
+      sl-button::part(base) {
+        width: 6rem;
+      }
+      span {
+        color: var(--sl-color-danger-700);
+        margin-bottom: 12px;
+      }
+      sl-progress-ring::part(label) {
+        font-weight: bold;
+        color: #00008b;
+      }
+      sl-alert {
+        margin-top: 4px;
       }
       .head {
         display: flex;
@@ -655,6 +768,24 @@ export class Empform extends LitElement {
         justify-content: center;
         margin-left: 5px;
         border-radius: 10px;
+      }
+      .submit_div {
+        display: flex;
+        flex-direction: space-between;
+      }
+      .submit_div sl-button {
+        margin-right: 5px;
+      }
+      .submit_div_a {
+        display: flex;
+        flex-direction: column;
+      }
+      .footer{
+        display:flex;
+        flex-direction:column;
+      }
+      .alerts{
+        margin-top:5px;
       }
 
       #navigator {
@@ -673,6 +804,7 @@ export class Empform extends LitElement {
       .tomato-button::part(base) {
         background-color: var(--sl-color-neutral-0);
         border: solid 1px tomato;
+        width: 7rem;
       }
 
       .tomato-button::part(base):hover {
@@ -690,80 +822,24 @@ export class Empform extends LitElement {
       .tomato-button::part(label) {
         color: tomato;
       }
-
-      /* span {
-        color: red;
-        width: 200px;
-      }
-
-      input {
+      .submit_div {
         display: flex;
-        width: 200px;
-        justify-self: right;
+        flex-direction: row;
       }
-
-      .container {
-        margin: 20px;
-        width: 30vw;
-        border: 2px solid black;
-        border-radius: 10px;
-        background-color: #fff;
-        padding: 2rem 5rem;
-        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-      }
-      .heading {
-        border: 2px solid #00008b;
-        text-align: center;
-        background: #00008b;
-        color: white;
-      }
-      .form input {
-        display: inline-block;
-        width: 100%;
-      }
-      .form label {
-        font-weight: bold;
-      }
-      .container div {
-        margin-bottom: 1rem;
-      }
-      .btn {
+      .slot_container {
         display: flex;
-        margin-top: 2rem;
+        align-items: center;
         justify-content: center;
       }
-      .submit_div{
-        display: flex;
-        flex-direction:column;
+      .progress_div {
+        margin-top: 5rem;
       }
-      #sub_btn {
-        font-weight: bold;
-        background-color: #2355b7;
-        padding: 5px 18px;
-        color: white;
-        cursor: pointer;
-        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+      #submit_btn {
+        margin-left: 4px;
       }
-
-      @keyframes pulse {
-        0% {
-          transform: scale(1);
-        }
-        70% {
-          transform: scale(0.9);
-        }
-        100% {
-          transform: scale(1);
-        }
+      #f_name {
+        margin-top: 10px;
       }
-
-      #sub_btn:hover {
-        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
-        color: #2355b7;
-        background-color: white;
-        animation: pulse 1s;
-        transition: 0.2s;
-      } */
     `;
   }
 
@@ -802,6 +878,7 @@ export class Empform extends LitElement {
         Country: this.employee.country.value,
         Pincode: this.employee.pincode.value,
       };
+      let progressRing = document.querySelector(".progress-ring-values");
       var submit_btn = this.renderRoot.querySelector("#submit_btn");
       submit_btn.innerHTML = "Submitted";
       submit_btn.variant = "success";
@@ -814,6 +891,8 @@ export class Empform extends LitElement {
       localStorage.setItem("Form_Data", JSON.stringify(olddata));
       // let data=JSON.parse(localStorage.getItem("Form_Data"));
       // console.log(data);
+      this.progress_value = 100;
+      this.progress_text = "Completed";
 
       const form = this.renderRoot.querySelector("form");
       let alert = this.renderRoot.querySelector("sl-alert");
@@ -826,7 +905,7 @@ export class Empform extends LitElement {
 
         submit_btn.variant = "primary";
         submit_btn.innerHTML = "Submit";
-        form.reset();
+        window.location.reload();
       }, "2000");
     } else if (
       this.employee.name.value == "" &&

@@ -1,16 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
 *{
-    margin: 0;
-    padding: 0;
-    font-family: 'Lato', sans-serif;
-
+  margin: 0;
+  padding: 0;
+  font-family: 'Lato', sans-serif;
 }
-
+body {
+  margin: 0;
+  padding: 0;
+  background-image: url("./background.png");
+  background-size: cover;
+  background-position: center;
+}
 .container{
-    width: 100vw;
-    height: 100vh;
-    background:linear-gradient(90deg,#c7dbff,#008b80);
-}
-.table{
-    margin-top:2rem;
+  margin-top:12px;
+  position: relative;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+ 
+        
 }
