@@ -10,14 +10,8 @@ import "@shoelace-style/shoelace/dist/components/button/button.js";
 import "@shoelace-style/shoelace/dist/components/select/select.js";
 import "@shoelace-style/shoelace/dist/components/option/option.js";
 import "@shoelace-style/shoelace/dist/components/tooltip/tooltip.js";
-
 import "@shoelace-style/shoelace/dist/components/progress-ring/progress-ring.js";
-// import 'https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.4.0/dist/components/icon/icon.js';
-// import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
-import '@shoelace-style/shoelace/dist/components/icon/icon.js';
-
-
- 
+import "@shoelace-style/shoelace/dist/components/icon/icon.js";
 
 export class Empform extends LitElement {
   static properties = {
@@ -90,23 +84,23 @@ export class Empform extends LitElement {
       email.value = this.editData.Email;
       per_email.value = this.editData.Per_email;
       for (let i = 0; i < department.length; i++) {
-        
-        if (department[i].key ==  this.editData.Department) {
-            console.log("in for loop if",department[i].value,dep.value)
+        if (department[i].key == this.editData.Department) {
+          console.log("in for loop if", department[i].value, dep.value);
           // Return the corresponding value
-          dep.placeholder= department[i].value;
+          dep.placeholder = department[i].value;
           console.log(dep.value);
         }
       }
-      for (let i = 0; i < designation.length; i++) {
-        
-        if (designation[i].key ==  this.editData.Designation) {
-            
-          // Return the corresponding value
-          des.placeholder= designation[i].value;
-          
-        }
-      }
+      // for (let i = 0; i < designation.length; i++) {
+
+      //   if (designation[i].key ==  this.editData.Designation) {
+
+      //     // Return the corresponding value
+      //     des.placeholder= designation[i].value;
+
+      //   }
+      // }
+
       // department.value = this.editData.Department;
       // designation.value = this.editData.Designation;
       phone.value = this.editData.Phone;
@@ -114,30 +108,28 @@ export class Empform extends LitElement {
       line1.value = this.editData.Add_line1;
       line2.value = this.editData.Add_line2;
       city.value = this.editData.City;
-      for (let i = 0; i < state.length; i++) {
-        
-        if (state[i].key ==  this.editData.State) {
-            
-          // Return the corresponding value
-          st.placeholder= state[i].value;
-          
-        }
-      }
+      // for (let i = 0; i < state.length; i++) {
+
+      //   if (state[i].key ==  this.editData.State) {
+
+      //     // Return the corresponding value
+      //     st.placeholder= state[i].value;
+
+      //   }
+      // }
       // state.value = this.editData.State;
       // country.value = this.editData.Country;
-      for (let i = 0; i < country.length; i++) {
-        
-        if (country[i].key ==  this.editData.Country) {
-            
-          // Return the corresponding value
-          co.placeholder= state[i].value;
-          
-        }
-      }
+      // for (let i = 0; i < country.length; i++) {
+
+      //   if (country[i].key ==  this.editData.Country) {
+
+      //     // Return the corresponding value
+      //     co.placeholder= state[i].value;
+
+      //   }
+      // }
       landmark.value = this.editData.Landmark;
       pincode.value = this.editData.Pincode;
-
-      // run a function to pre-fill form
     } else {
       console.log("creating new");
     }
@@ -145,8 +137,6 @@ export class Empform extends LitElement {
 
   decide(e, type) {
     if (this.isEditing) {
-      // var edit_index = sessionStorage.getItem("edit_index");
-
       switch (type) {
         case "name":
           {
@@ -312,626 +302,6 @@ export class Empform extends LitElement {
     } else if (partNumber === 3) {
       part3.style.display = "block";
       this.progress_value = 66.66;
-    }
-  }
-
-  render() {
-    return html`
-    <div class="head">
-     
-    ${
-      !this.isEditing
-        ? html`
-            <div id="navigator">
-              <div id="tablepage_btn">
-                <sl-button
-                  class="tomato-button"
-                  @click=${() => (window.location.href = "_table.html")}
-                  >Employee Data</sl-button
-                >
-                <br />
-                <div class="progress_div">
-                  <sl-progress-ring
-                    value="${this.progress_value}"
-                    class="progress-ring-values"
-                    >${this.progress_text}</sl-progress-ring
-                  >
-                </div>
-              </div>
-            </div>
-          `
-        : html`
-            <!-- <div>
-              <sl-button
-                class="tomato-button"
-                @click=${() => (window.location.href = "_table.html")}
-                >Cancel Edit</sl-button
-              >
-            </div> -->
-          `
-    }
-      
-    
-      
-   
-
-
-    <form class="form">
-    
-      <div class="container">
-      
-        <div class="parts" id="part1" >
-          <div class="slot_container">
-          <slot id="heading"></slot>
-          </div>
-
-        
-        
-  
-        <div class="input_field"  id="name">
-        <sl-tooltip content="Enter Name" placement="right" hoist>
-        <sl-input required label="Name" size="small" id="f_name" @input=${(e) =>
-          this.decide(e, "name")}></sl-input><span>${
-      this.employee.name.errorMessage
-    }</span>
-    
-  </sl-tooltip>
-
-
-        
-            
-        </div>
-
-
-        <div class="input_field" id="emp_code">
-        <sl-tooltip content="Enter 4 digit employee code" placement="right" hoist>
-        <sl-input required label="Employee Code:" size="small"  id="f_code" @input=${(
-          e
-        ) => this.decide(e, "code")}></sl-input>
-        </sl-tooltip>
-
-        
-       <span>${this.employee.emp_code?.errorMessage}</span>
-        </div>
- 
-        <div class="email">
-        <div class="input_field" id="email_office">
-        <sl-tooltip content="Domain name should be (@annalect.com)" placement="right" hoist>
-        <sl-input required label="Office Email:" size="small" id="f_email" @input=${(
-          e
-        ) => this.decide(e, "email")}></sl-input>
-        </sl-tooltip> 
-
-        
-        <span>${this.employee.email?.errorMessage}</span>
-        
-        </div>
-
-        <div class="input_field" id="email_personal">
-
-        <sl-tooltip content="Domain name should be (@gamil.com)" placement="right" hoist>
-        <sl-input required label="Personal Email:" size="small" id="f_peremail" @input=${(
-          e
-        ) => this.decide(e, "per_email")}></sl-input>
-        </sl-tooltip>
-        
-        <span>${this.employee.per_email?.errorMessage}</span>
-        </div>
-            
-        </div>
-
-        
-
-        <div class="input_field" id="department">
-          
-          
-        <label class="inp_lable">Department:</label>
-
-        <sl-tooltip content="Select Department" placement="right" hoist>
-        <sl-select id="f_dep" size="small" 
-        @click=${(e) => this.decide(e, "department")}>
-            ${repeat(
-              department,
-              (items) =>
-                html`
-                  <sl-option value=${items.key}>${items.value} </sl-option>
-                `
-            )}
-        </sl-select>
-        </sl-tooltip>
-        
-<span>${this.employee.department?.errorMessage}</span>
-          
-            
-        </div>  
-          
-  
-        
-
-      <div class="input_field" id="designation">
-      <label class="inp_lable">Designation:</label>
-
-      <sl-tooltip content="Select Designation" placement="right" hoist>
-      <sl-select  id="f_dep" size="small" 
-      @click=${(e) => this.decide(e, "designation")}>                     
-            ${repeat(
-              designation,
-              (items) =>
-                html`
-                  <sl-option value=${items.key}>${items.value} </sl-option>
-                `
-            )}
-            </sl-select>
-      </sl-tooltip>
-      
-      </div>
-
-      <div >
-            <sl-button
-              
-              variant="primary"
-              id="next_btn_1"
-              @click=${() => this.showPart(2)}
-              
-              >Next</sl-button
-            >
-          </div>
-      </div>
-
-      <div class="part" id="part2" style="display:none;">
-        
-      
-      
-    <div class="phone_div">
-    <div class="input_field" id="contact">
-
-    <sl-tooltip content="Enter phone number" placement="right" hoist>
-    <sl-input label="Phone Number:"  size="small" id="f_phone" @input=${(e) =>
-      this.decide(e, "phone")}></sl-input>
-    </sl-tooltip>
-    
-    <span>${this.employee.phone?.errorMessage}</span>
-      </div>
-
-      <div class="input_field" id="sec_contact">
-
-      <sl-tooltip content="Enter secondary phone number" placement="right" hoist>
-      <sl-input label="Secondary Phone Number:"  size="small" id="f_secph" @input=${(
-        e
-      ) => this.decide(e, "sec_phone")}></sl-input>
-      </sl-tooltip>
-      
-        <span>${this.employee.sec_phone?.errorMessage}</span>
-      </div>
-<hr>
-        
-    </div>
-    <div class="btn">
-              <sl-button
-                variant="secondary"
-                id="prev_btn_2"
-                @click=${() => this.showPart(1)}
-                >Previous</sl-button
-              >
-              <sl-button
-                variant="primary"
-                id="next_btn_2"
-                @click=${() => this.showPart(3)}
-                >Next</sl-button
-              >
-              
-            </div>
-    </div>
-      
-    <div class="part" id="part3" style="display:none;">
-      
-    
-      <div class= "address_div">
-            
-
-            <div class="input_add" id="line_1">
-
-            <sl-tooltip content="House no. ,floor" placement="right" hoist>
-            <sl-input label="Address Line 1:" size="small"  id="f_line1" @input=${(
-              e
-            ) => {
-              this.decide(e, "line1");
-            }}></sl-input>
-            </sl-tooltip>
-            
-            <span>${this.employee.line1?.errorMessage}</span>
-            </div>
-
-            <div class="input_add" id="line_2">
-
-            <sl-tooltip content="Area, locality" placement="right" hoist>
-            <sl-input label="Address Line 2:" size="small"  id="f_line2" @input=${(
-              e
-            ) => {
-              this.decide(e, "line2");
-            }}></sl-input>
-            </sl-tooltip>
-            
-            <span>${this.employee.line2?.errorMessage}</span>
-            </div>
-
-            <div class="input_add" id="city">
-
-            <sl-tooltip content="Enter city name" placement="right" hoist>
-            <sl-input label="City:" size="small"  id="f_city" @input=${(e) => {
-              this.decide(e, "city");
-            }}></sl-input>
-            </sl-tooltip>
-            
-            <span>${this.employee.city?.errorMessage}</span>
-            </div>
-
-            <div class="input_add" id="landmark">
-
-            <sl-tooltip content="Enter Landmark" placement="right" hoist>
-            <sl-input label="Landmark:" size="small"  id="f_mark" @input=${(
-              e
-            ) => {
-              this.decide(e, "landmark");
-            }}></sl-input>
-    
-            </sl-tooltip>
-            
-                <span></span> 
-            </div>   
-
-            <div class="input_add"  id="state">
-                <label for="state">State:</label>
-
-                <sl-tooltip content="Select state" placement="right" hoist>
-                <sl-select  id="f_dep" size="small" @click=${(e) =>
-                  this.decide(e, "state")}>
-            ${repeat(
-              state,
-              (items) =>
-                html`
-                  <sl-option value=${items.key}>${items.value} </sl-option>
-                `
-            )}
-                </sl-tooltip>
-               
-                
-                <span>${this.employee.state?.errorMessage}</span>
-            </div>
-
-            <div class="input_add" id="country">
-                <label for="country">Country:</label>
-
-                <sl-tooltip content="Select country" placement="right" hoist>
-                <sl-select size="small" id="f_dep"  @click=${(e) =>
-                  this.decide(e, "country")}>
-            ${repeat(
-              country,
-              (items) =>
-                html`
-                  <sl-option value=${items.country}
-                    >${items.country}
-                  </sl-option>
-                `
-            )}
-                </sl-tooltip>
-               
-                <span>${this.employee.country?.errorMessage}</span>
-            </div>
-
-            <div class="input_add" id="pin" >
-
-            <sl-tooltip content="Enter pincode" placement="right" hoist>
-            <sl-input label="Pincode:" size="small" id="f_pincode" @input=${(
-              e
-            ) => {
-              this.decide(e, "pin");
-            }}></sl-input>
-                <span>${this.employee.pincode?.errorMessage}</span>
-
-    
-            </sl-tooltip>
-           
-            </div>
-              
-        </div>
-                
-            
-        
-
-      <div class=btn>
-        
-        ${
-          !this.isEditing
-            ? html`
-                <div class="submit_div_a">
-                  <div class="buttons">
-                    <sl-button
-                      variant="secondary"
-                      id="prev_btn_3"
-                      @click=${() => this.showPart(2)}
-                      >Previous</sl-button
-                    >
-                    <sl-button
-                      variant="primary"
-                      id="submit_btn"
-                      @click=${(e) => this._submit(e)}
-                      >Submit</sl-button
-                    >
-                  </div>
-                  <div class="alerts">
-                    <sl-alert variant="success" duration="2000" closable>
-                      Form submitted successfully.
-                    </sl-alert>
-                  </div>
-                </div>
-              `
-            : html`
-            <div class="footer">
-                <div class="submit_div">
-                  <sl-button
-                    variant="secondary"
-                    id="prev_btn_3"
-                    @click=${() => this.showPart(2)}
-                    >Previous</sl-button
-                  >
-                  <sl-button
-                    variant="primary"
-                    @click=${(e) => this.submit_edit(e)}
-                    >Update</sl-button
-                  >
-                  <sl-button
-                    variant="primary"
-                    @click=${() => this.cancel_edit()}
-                    >Cancel</sl-button
-                  >
-                </div>
-                <div class="alerts">
-                  <sl-alert
-                    id="update_alert"
-                    duration="2000"
-                    closable
-                    variant="neutral"
-                  >
-                    <sl-icon slot="icon" name="gear"></sl-icon>
-                    <strong>Form Updated</strong><br />
-                  </sl-alert>
-                </div>
-        </div>
-              `
-        }
-      </div>
-      </div>
-
-       
-            </form>
-              </div>
-
-      
-    `;
-  }
-  static get styles() {
-    return css`
-      @import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
-
-      * {
-        font-family: "Lato", sans-serif;
-      }
-      label {
-        font-weight: bold;
-        font-size: 14px;
-      }
-      slot {
-        margin-bottom: 10px;
-        color: var(--sl-color-primary-900);
-      }
-
-      sl-input {
-        margin-bottom: 10px;
-        width: 25rem;
-      }
-      sl-input::part(form-control-label) {
-        font-weight: bold;
-      }
-      /* sl-input::part(form-control-input){
-        box-shadow:0 0 10px red;
-      } */
-      sl-select {
-        margin-bottom: 10px;
-      }
-      sl-button::part(base) {
-        width: 6rem;
-      }
-      span {
-        color: var(--sl-color-danger-700);
-        margin-bottom: 12px;
-      }
-      sl-progress-ring::part(label) {
-        font-weight: bold;
-        color: #00008b;
-      }
-      sl-alert {
-        margin-top: 4px;
-      }
-      .head {
-        display: flex;
-        flex-direction: row;
-      }
-
-      .form {
-        box-shadow: 0 0 10px rgba(300, 300, 300, 0.4);
-        background: white;
-        padding: 15px;
-        display: flex;
-        width: 30rem;
-        height: 37rem;
-        justify-content: center;
-        margin-left: 5px;
-        border-radius: 10px;
-      }
-      .submit_div {
-        display: flex;
-        flex-direction: space-between;
-      }
-      .submit_div sl-button {
-        margin-right: 5px;
-      }
-      .submit_div_a {
-        display: flex;
-        flex-direction: column;
-      }
-      .footer{
-        display:flex;
-        flex-direction:column;
-      }
-      .alerts{
-        margin-top:5px;
-      }
-
-      #navigator {
-        box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
-        background: white;
-        display: flex;
-        flex-direction: column;
-        margin-right: 5px;
-        width: 15rem;
-        height: 37rem;
-        padding: 15px;
-        align-items: center;
-        border-radius: 10px;
-      }
-
-      .tomato-button::part(base) {
-        background-color: var(--sl-color-neutral-0);
-        border: solid 1px tomato;
-        width: 7rem;
-      }
-
-      .tomato-button::part(base):hover {
-        background-color: rgba(255, 99, 71, 0.1);
-      }
-
-      .tomato-button::part(base):active {
-        background-color: rgba(255, 99, 71, 0.2);
-      }
-
-      .tomato-button::part(base):focus-visible {
-        box-shadow: 0 0 0 3px rgba(255, 99, 71, 0.33);
-      }
-
-      .tomato-button::part(label) {
-        color: tomato;
-      }
-      .submit_div {
-        display: flex;
-        flex-direction: row;
-      }
-      .slot_container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .progress_div {
-        margin-top: 5rem;
-      }
-      #submit_btn {
-        margin-left: 4px;
-      }
-      #f_name {
-        margin-top: 10px;
-      }
-    `;
-  }
-
-  _submit(e) {
-    e.preventDefault();
-    if (
-      this.employee.name.isValidName === true
-      // this.employee.emp_code.isValidName === true &&
-      // this.employee.email.isValidName === true &&
-      // this.employee.per_email.isValidName === true &&
-      // this.employee.department.isValidName === true &&
-      // this.employee.designation.isValidName === true &&
-      // this.employee.phone.isValidName === true &&
-      // this.employee.line1.isValidName === true &&
-      // this.employee.line2.isValidName === true &&
-      // this.employee.city.isValidName === true &&
-      // this.employee.landmark.isValidName === true &&
-      // this.employee.state.isValidName === true &&
-      // this.employee.country.isValidName === true &&
-      //   this.employee.pincode.isValidName === true
-    ) {
-      let data = {
-        Name: this.employee.name.value,
-        Emp_code: this.employee.emp_code.value,
-        Email: this.employee.email.value,
-        Per_email: this.employee.per_email.value,
-        Department: this.employee.department.value,
-        Designation: this.employee.designation.value,
-        Phone: this.employee.phone.value,
-        Sec_phone: this.employee.sec_phone.value,
-        Add_line1: this.employee.line1.value,
-        Add_line2: this.employee.line2.value,
-        City: this.employee.city.value,
-        Landmark: this.employee.landmark.value,
-        State: this.employee.state.value,
-        Country: this.employee.country.value,
-        Pincode: this.employee.pincode.value,
-      };
-      let progressRing = document.querySelector(".progress-ring-values");
-      var submit_btn = this.renderRoot.querySelector("#submit_btn");
-      submit_btn.innerHTML = "Submitted";
-      submit_btn.variant = "success";
-
-      //  localStorage.clear("Form_Data");
-      let olddata = JSON.parse(localStorage.getItem("Form_Data")) || [];
-      // this.full_data.push(olddata);
-      olddata.push(data);
-
-      localStorage.setItem("Form_Data", JSON.stringify(olddata));
-      // let data=JSON.parse(localStorage.getItem("Form_Data"));
-      // console.log(data);
-      this.progress_value = 100;
-      this.progress_text = "Completed";
-
-      const form = this.renderRoot.querySelector("form");
-      let alert = this.renderRoot.querySelector("sl-alert");
-      alert.variant = "success";
-      alert.innerHTML = "Form Submitted Successfully";
-      alert.show();
-      setTimeout(() => {
-        const form = this.renderRoot.querySelector("form");
-        var submit_btn = this.renderRoot.querySelector("#submit_btn");
-
-        submit_btn.variant = "primary";
-        submit_btn.innerHTML = "Submit";
-        window.location.reload();
-      }, "2000");
-    } else if (
-      this.employee.name.value == "" &&
-      this.employee.emp_code.value == "" &&
-      this.employee.email.value == "" &&
-      this.employee.per_email.value == "" &&
-      this.employee.department.value == "" &&
-      this.employee.designation.value === "" &&
-      this.employee.phone.value == "" &&
-      this.employee.line1.value == "" &&
-      this.employee.line2.value == "" &&
-      this.employee.city.value == "" &&
-      this.employee.landmark.value == "" &&
-      this.employee.state.value == "" &&
-      this.employee.country.value == "" &&
-      this.employee.pincode.value == ""
-    ) {
-      let alert = this.renderRoot.querySelector("sl-alert");
-      alert.variant = "danger";
-      alert.innerHTML = "Fill all the fields correctly";
-      alert.show();
-    } else {
-      let alert = this.renderRoot.querySelector("sl-alert");
-      alert.variant = "danger";
-      alert.innerHTML = "Fill all the fields correctly";
-      alert.show();
     }
   }
 
@@ -1215,6 +585,599 @@ export class Empform extends LitElement {
         }
         break;
     }
+  }
+
+  _submit(e) {
+    e.preventDefault();
+    if (
+      this.employee.name.isValidName === true &&
+      this.employee.emp_code.isValidName === true &&
+      this.employee.email.isValidName === true &&
+      this.employee.per_email.isValidName === true &&
+      this.employee.department.isValidName === true &&
+      this.employee.designation.isValidName === true &&
+      this.employee.phone.isValidName === true &&
+      this.employee.line1.isValidName === true &&
+      this.employee.line2.isValidName === true &&
+      this.employee.city.isValidName === true &&
+      this.employee.landmark.isValidName === true &&
+      this.employee.state.isValidName === true &&
+      this.employee.country.isValidName === true &&
+      this.employee.pincode.isValidName === true
+    ) {
+      let data = {
+        Name: this.employee.name.value,
+        Emp_code: this.employee.emp_code.value,
+        Email: this.employee.email.value,
+        Per_email: this.employee.per_email.value,
+        Department: this.employee.department.value,
+        Designation: this.employee.designation.value,
+        Phone: this.employee.phone.value,
+        Sec_phone: this.employee.sec_phone.value,
+        Add_line1: this.employee.line1.value,
+        Add_line2: this.employee.line2.value,
+        City: this.employee.city.value,
+        Landmark: this.employee.landmark.value,
+        State: this.employee.state.value,
+        Country: this.employee.country.value,
+        Pincode: this.employee.pincode.value,
+      };
+      let progressRing = document.querySelector(".progress-ring-values");
+      var submit_btn = this.renderRoot.querySelector("#submit_btn");
+      submit_btn.innerHTML = "Submitted";
+      submit_btn.variant = "success";
+
+      let olddata = JSON.parse(localStorage.getItem("Form_Data")) || [];
+      olddata.push(data);
+
+      localStorage.setItem("Form_Data", JSON.stringify(olddata));
+
+      this.progress_value = 100;
+      this.progress_text = "Completed";
+
+      const form = this.renderRoot.querySelector("form");
+      let alert = this.renderRoot.querySelector("sl-alert");
+      alert.variant = "success";
+      alert.innerHTML = "Form Submitted Successfully";
+      alert.show();
+      setTimeout(() => {
+        const form = this.renderRoot.querySelector("form");
+        var submit_btn = this.renderRoot.querySelector("#submit_btn");
+
+        submit_btn.variant = "primary";
+        submit_btn.innerHTML = "Submit";
+        window.location.reload();
+      }, "2000");
+    } else if (
+      this.employee.name.value == "" &&
+      this.employee.emp_code.value == "" &&
+      this.employee.email.value == "" &&
+      this.employee.per_email.value == "" &&
+      this.employee.department.value == "" &&
+      this.employee.designation.value === "" &&
+      this.employee.phone.value == "" &&
+      this.employee.line1.value == "" &&
+      this.employee.line2.value == "" &&
+      this.employee.city.value == "" &&
+      this.employee.landmark.value == "" &&
+      this.employee.state.value == "" &&
+      this.employee.country.value == "" &&
+      this.employee.pincode.value == ""
+    ) {
+      let alert = this.renderRoot.querySelector("sl-alert");
+      alert.variant = "danger";
+      alert.innerHTML = "Fill all the fields correctly";
+      alert.show();
+    } else {
+      let alert = this.renderRoot.querySelector("sl-alert");
+      alert.variant = "danger";
+      alert.innerHTML = "Fill all the fields correctly";
+      alert.show();
+    }
+  }
+
+  render() {
+    return html`
+    <div class="head">
+     
+    ${
+      !this.isEditing
+        ? html`
+            <div id="navigator">
+              <div id="tablepage_btn">
+                <sl-button
+                  class="tomato-button"
+                  @click=${() => (window.location.href = "_table.html")}
+                  >Employee Data</sl-button
+                >
+                <br />
+                <div class="progress_div">
+                  <sl-progress-ring
+                    value="${this.progress_value}"
+                    class="progress-ring-values"
+                    >${this.progress_text}</sl-progress-ring
+                  >
+                </div>
+              </div>
+            </div>
+          `
+        : html``
+    }
+      
+    
+      
+   
+
+
+    <form class="form">
+    
+      <div class="container">
+      
+        <div class="parts" id="part1" >
+          <div class="slot_container">
+          <slot id="heading"></slot>
+        </div>
+
+        <!-- show input in one row -->
+        <div class="form_row">
+
+        <div class="input_field"  id="name">
+        <sl-tooltip content="Enter Name" placement="right" hoist>
+        <sl-input placeholder="Enter Name" label="Name" size="medium" id="f_name" @input=${(
+          e
+        ) => this.decide(e, "name")}></sl-input>
+        <span>${this.employee.name.errorMessage}</span>
+    
+       </sl-tooltip>  
+       </div>
+
+       <div class="input_field" id="emp_code">
+        <sl-tooltip content="Enter 4 digit employee code" placement="right" hoist>
+        <sl-input placeholder="Enter employee code" label="Employee Code:" size="medium"  id="f_code" @input=${(
+          e
+        ) => this.decide(e, "code")}></sl-input>
+        </sl-tooltip>
+
+        
+       <span>${this.employee.emp_code?.errorMessage}</span>
+        </div>
+
+        </div>
+        
+
+
+        
+ 
+       
+       
+            
+        
+
+        
+
+        <div class="input_field" id="department">
+          
+          
+        <label class="inp_lable">Department:</label>
+
+        <sl-tooltip content="Select Department" placement="right" hoist>
+        <sl-select placeholder="Select Department" id="f_dep" size="medium" 
+        @click=${(e) => this.decide(e, "department")}>
+            ${repeat(
+              department,
+              (items) =>
+                html`
+                  <sl-option value=${items.key}>${items.value} </sl-option>
+                `
+            )}
+        </sl-select>
+        </sl-tooltip>
+        
+<span>${this.employee.department?.errorMessage}</span>
+          
+            
+        </div>  
+          
+  
+        
+
+      <div class="input_field" id="designation">
+      <label class="inp_lable">Designation:</label>
+
+      <sl-tooltip content="Select Designation" placement="right" hoist>
+      <sl-select placeholder="Select Designation" id="f_dep" size="medium" 
+      @click=${(e) => this.decide(e, "designation")}>                     
+            ${repeat(
+              designation,
+              (items) =>
+                html`
+                  <sl-option value=${items.key}>${items.value} </sl-option>
+                `
+            )}
+            </sl-select>
+      </sl-tooltip>
+      
+      </div>
+
+      <div >
+            <sl-button
+              
+              variant="primary"
+              id="next_btn_1"
+              @click=${() => this.showPart(2)}
+              
+              >Next</sl-button
+            >
+          </div>
+      </div>
+
+<!-- part2 of form contain contacts -->
+      <div class="part" id="part2" style="display:none;">
+
+       <div class="email">
+        <div class="input_field" id="email_office">
+        <sl-tooltip  content="Domain name should be (@annalect.com)" placement="right" hoist>
+        <sl-input placeholder="Domain name should be (@annalect.com)" label="Office Email:" size="medium" id="f_email" @input=${(
+          e
+        ) => this.decide(e, "email")}></sl-input>
+        </sl-tooltip> 
+        <span>${this.employee.email?.errorMessage}</span>
+        </div>
+        </div>
+        
+        <div class="second_email">
+        <div class="input_field" id="email_personal">
+        <sl-tooltip content="Domain name should be (@gamil.com)" placement="right" hoist>
+        <sl-input placeholder="Domain name should be (@gamil.com)" label="Personal Email:" size="medium" id="f_peremail" @input=${(
+          e
+        ) => this.decide(e, "per_email")}></sl-input>
+        </sl-tooltip>
+        <span>${this.employee.per_email?.errorMessage}</span>
+        </div>
+        </div>
+
+        <div class="phone_div">
+        <div class="input_field" id="contact">
+        <sl-tooltip content="Enter phone number" placement="right" hoist>
+        <sl-input placeholder="Enter Phone Number" label="Phone Number:"  size="medium" id="f_phone" @input=${(
+          e
+        ) => this.decide(e, "phone")}></sl-input>
+        </sl-tooltip>
+        <span>${this.employee.phone?.errorMessage}</span>
+        </div>
+        </div>
+
+        <div class="second_phone">    
+        <div class="input_field" id="sec_contact">
+        <sl-tooltip content="Enter secondary phone number" placement="right" hoist>
+        <sl-input placeholder="Enter secondary phone number" label="Secondary Phone Number:"  size="medium" id="f_secph" @input=${(
+          e
+        ) => this.decide(e, "sec_phone")}></sl-input>
+        </sl-tooltip>
+        <span>${this.employee.sec_phone?.errorMessage}</span>
+        </div>
+
+        <div class="btn">
+          <sl-button
+          variant="secondary"
+          id="prev_btn_2"
+          @click=${() => this.showPart(1)}
+          >Previous</sl-button
+          >
+          <sl-button
+          variant="primary"
+          id="next_btn_2"
+          @click=${() => this.showPart(3)}
+          >Next</sl-button
+          >
+        </div>
+
+    </div>
+    </div>
+
+    <!-- part3 form starts   -->
+    <div class="part" id="part3" style="display:none">
+
+    <div class="form_row">
+        
+    <div class="input_add" id="line_1">
+    <sl-tooltip content="House no. ,floor" placement="right" hoist>
+    <sl-input placeholder="House no. ,floor" label="Address Line 1:" size="medium"  id="f_line1" @input=${(
+      e
+    ) => {
+      this.decide(e, "line1");
+    }}></sl-input>
+    </sl-tooltip>
+    <span>${this.employee.line1?.errorMessage}</span>
+    </div>
+
+    <div class="input_add" id="line_2">
+    <sl-tooltip content="Area, locality" placement="right" hoist>
+    <sl-input placeholder="Area, locality" label="Address Line 2:" size="medium"  id="f_line2" @input=${(
+      e
+    ) => {
+      this.decide(e, "line2");
+    }}></sl-input>
+    </sl-tooltip>
+    <span>${this.employee.line2?.errorMessage}</span>
+    </div> 
+
+    </div>
+
+    <div class="form_row">
+    <div class="input_add" id="city">
+    <sl-tooltip content="Enter city name" placement="right" hoist>
+    <sl-input placeholder="Enter city name" label="City:" size="medium"  id="f_city" @input=${(
+      e
+    ) => {
+      this.decide(e, "city");
+    }}></sl-input>
+    </sl-tooltip>
+    <span>${this.employee.city?.errorMessage}</span>
+    </div>
+
+    <div class="input_add" id="landmark">
+    <sl-tooltip content="Enter Landmark" placement="right" hoist>
+    <sl-input placeholder="Enter Landmark" label="Landmark:" size="medium"  id="f_mark" @input=${(
+      e
+    ) => {
+    this.decide(e, "landmark");
+    }}></sl-input>
+    </sl-tooltip>
+    <span></span> 
+    </div>
+    </div>
+
+    <div class="input_add"  id="state">
+    <label for="state">State:</label>  
+    <sl-tooltip content="Select State" placement="right" hoist>
+    <sl-select placeholder="Select state" id="f_dep" size="medium" @click=${(
+      e
+    ) => this.decide(e, "state")}>
+    ${repeat(
+      state,
+      (items) =>
+         html`
+        <sl-option value=${items.key}>${items.value} </sl-option>
+        `
+    )}
+        </sl-tooltip>
+        <span>${this.employee.state?.errorMessage}</span>
+    </div>
+
+    <div class="input_add" id="country">
+        <label for="country">Country:</label>
+        <sl-tooltip content="Select country" placement="right" hoist>
+        <sl-select placeholder="Select Country" size="medium" id="f_dep"  @click=${(
+          e
+        ) => this.decide(e, "country")}>
+    ${repeat(
+      country,
+      (items) =>
+        html`
+          <sl-option value=${items.country}
+              >${items.country}
+          </sl-option>
+        `
+    )}
+        </sl-tooltip>
+        <span>${this.employee.country?.errorMessage}</span>
+      </div>
+     
+    <div class="input_add" id="pin" >
+    <sl-tooltip content="Enter pincode" placement="right" hoist>
+    <sl-input placeholder="Enter pincode" label="Pincode:" size="medium" id="f_pincode" @input=${(
+      e
+    ) => {
+      this.decide(e, "pin");
+    }}></sl-input>
+        <span>${this.employee.pincode?.errorMessage}</span>
+    </sl-tooltip>
+    </div> 
+         
+      <div class=btn>
+        ${
+          !this.isEditing
+            ? html`
+                <div class="submit_div_a">
+                  <div class="buttons">
+                    <sl-button
+                      variant="secondary"
+                      id="prev_btn_3"
+                      @click=${() => this.showPart(2)}
+                      >Previous</sl-button
+                    >
+                    <sl-button
+                      variant="primary"
+                      id="submit_btn"
+                      @click=${(e) => this._submit(e)}
+                      >Submit</sl-button
+                    >
+                  </div>
+                  <div class="alerts">
+                    <sl-alert variant="success" duration="2000" closable>
+                      Form submitted successfully.
+                    </sl-alert>
+                  </div>
+                </div>
+              `
+            : html`
+                <div class="footer">
+                  <div class="submit_div">
+                    <sl-button
+                      variant="secondary"
+                      id="prev_btn_3"
+                      @click=${() => this.showPart(2)}
+                      >Previous</sl-button
+                    >
+                    <sl-button
+                      variant="primary"
+                      @click=${(e) => this.submit_edit(e)}
+                      >Update</sl-button
+                    >
+                    <sl-button
+                      variant="primary"
+                      @click=${() => this.cancel_edit()}
+                      >Cancel</sl-button
+                    >
+                  </div>
+                  <div class="alerts">
+                    <sl-alert
+                      id="update_alert"
+                      duration="2000"
+                      closable
+                      variant="neutral"
+                    >
+                      <sl-icon slot="icon" name="gear"></sl-icon>
+                      <strong>Form Updated</strong><br />
+                    </sl-alert>
+                  </div>
+                </div>
+              `
+        }
+      </div>
+      </div>
+
+       
+            </form>
+              </div>
+
+      
+    `;
+  }
+  static get styles() {
+    return css`
+      @import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
+
+      * {
+        font-family: "Lato", sans-serif;
+      }
+      .form {
+        box-shadow: 0 0 10px rgba(300, 300, 300, 0.4);
+        background: white;
+
+        width: 30rem;
+        height: 37rem;
+
+        border-radius: 10px;
+      }
+      .form_row {
+        background: yellow;
+        display: flex;
+      }
+
+      /* label {
+        font-weight: bold;
+        font-size: 14px;
+      }
+      slot {
+        margin-bottom: 10px;
+        color: var(--sl-color-primary-900);
+      }
+
+      sl-input {
+        margin-bottom: 10px;
+        width: 25rem;
+      }
+      sl-input::part(form-control-label) {
+        font-weight: bold;
+      }
+
+      sl-select {
+        margin-bottom: 10px;
+      }
+      sl-button::part(base) {
+        width: 6rem;
+      }
+      span {
+        color: var(--sl-color-danger-700);
+        margin-bottom: 12px;
+      }
+      sl-progress-ring::part(label) {
+        font-weight: bold;
+        color: #00008b;
+      }
+      sl-alert {
+        margin-top: 4px;
+      }
+      .head {
+        display: flex;
+        flex-direction: row;
+      }
+
+     
+      .submit_div {
+        display: flex;
+        flex-direction: space-between;
+      }
+      .submit_div sl-button {
+        margin-right: 5px;
+      }
+      .submit_div_a {
+        display: flex;
+        flex-direction: column;
+      }
+      .footer {
+        display: flex;
+        flex-direction: column;
+      }
+      .alerts {
+        margin-top: 5px;
+      }
+
+      #navigator {
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+        background: white;
+        display: flex;
+        flex-direction: column;
+        margin-right: 5px;
+        width: 15rem;
+        height: 37rem;
+        padding: 15px;
+        align-items: center;
+        border-radius: 10px;
+      }
+
+      .tomato-button::part(base) {
+        background-color: var(--sl-color-neutral-0);
+        border: solid 1px tomato;
+        width: 7rem;
+      }
+
+      .tomato-button::part(base):hover {
+        background-color: rgba(255, 99, 71, 0.1);
+      }
+
+      .tomato-button::part(base):active {
+        background-color: rgba(255, 99, 71, 0.2);
+      }
+
+      .tomato-button::part(base):focus-visible {
+        box-shadow: 0 0 0 3px rgba(255, 99, 71, 0.33);
+      }
+
+      .tomato-button::part(label) {
+        color: tomato;
+      }
+      .submit_div {
+        display: flex;
+        flex-direction: row;
+      }
+      .slot_container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .progress_div {
+        margin-top: 5rem;
+      }
+      #submit_btn {
+        margin-left: 4px;
+      }
+      #f_name {
+        margin-top: 10px;
+      } */
+    `;
   }
 }
 

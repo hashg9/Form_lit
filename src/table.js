@@ -1,6 +1,5 @@
 import { LitElement, css, html, nothing } from "lit";
 import { repeat } from "lit/directives/repeat.js";
-import { department, designation, country, state } from "./data";
 import "./employee";
 import "@shoelace-style/shoelace/dist/components/alert/alert.js";
 import "@shoelace-style/shoelace/dist/components/progress-ring/progress-ring.js";
@@ -363,36 +362,8 @@ export class Table extends LitElement {
     });
     this.requestUpdate();
   }
-  // savechanges() {
-  //   var new_data = this.data[this.on_index];
-
-  //   new_data.Name = this.renderRoot.querySelector("#e_name").value;
-  //   new_data.Emp_code = this.renderRoot.querySelector("#e_code").value;
-  //   new_data.Email = this.renderRoot.querySelector("#e_email").value;
-  //   new_data.Per_email = this.renderRoot.querySelector("#e_pemail").value;
-  //   new_data.Department = this.renderRoot.querySelector("#e_department").value;
-  //   new_data.Designation =
-  //     this.renderRoot.querySelector("#e_designation").value;
-  //   new_data.Phone = this.renderRoot.querySelector("#e_phone").value;
-  //   new_data.Sec_phone = this.renderRoot.querySelector("#e_perphone").value;
-  //   new_data.Add_line1 = this.renderRoot.querySelector("#e_line1").value;
-  //   new_data.Add_line2 = this.renderRoot.querySelector("#e_line2").value;
-  //   new_data.Landmark = this.renderRoot.querySelector("#e_landmark").value;
-  //   new_data.City = this.renderRoot.querySelector("#e_city").value;
-  //   new_data.State = this.renderRoot.querySelector("#e_state").value;
-  //   new_data.Country = this.renderRoot.querySelector("#e_country").value;
-  //   new_data.Pincode = this.renderRoot.querySelector("#e_pincode").value;
-
-  //   localStorage.setItem("Form_Data", JSON.stringify(this.data));
-  //   var show1 = this.renderRoot.querySelector("#Form");
-
-  //   show1.classList.add("edit_form");
-  //   this.requestUpdate();
-  // }
 
   delete(index) {
-    //  this.full_data= JSON.parse(localStorage.getItem("Form_Data"));
-    // const dataDelete = this.data[index]
     this.data.splice(index, 1);
     localStorage.setItem("Form_Data", JSON.stringify(this.data));
     window.location.reload();
