@@ -1,5 +1,6 @@
 import { LitElement, css, html, nothing } from "lit";
 import { repeat } from "lit/directives/repeat.js";
+import { department, designation, country, state } from "./data";
 import "./employee";
 import "@shoelace-style/shoelace/dist/components/alert/alert.js";
 import "@shoelace-style/shoelace/dist/components/progress-ring/progress-ring.js";
@@ -23,10 +24,11 @@ export class Table extends LitElement {
       department: { type: String },
       editmode: { type: Array },
       editData: { type: Object },
+      sort_btn_text:{type: String}
     };
   }
   constructor() {
-    super(), (this.data = JSON.parse(localStorage.getItem("Form_Data")));
+    super(), (this.data = JSON.parse(localStorage.getItem("Form_Data"))||[]);
     this.emp_data = {};
     this.full_data = {};
 
@@ -50,6 +52,7 @@ export class Table extends LitElement {
     this.on_index = -1;
     this.editmode = [];
     this.editData = undefined;
+    this.sort_btn_text="Sort By Name";
   }
 
   static get styles() {
@@ -58,24 +61,31 @@ export class Table extends LitElement {
         padding: 0;
         margin: 0;
       }
-      .information {
-        box-shadow: 0 0 10px rgba(300, 300, 300, 0.4);
-        background:white;
-        border-radius:10px;
-        width:30rem;
-        height:34.5rem;
-        margin-left:5px;
-        display:flex;
-        justify-content:center;
-        padding-top:10px;
-
-        
+    
+      sl-dialog::part(base){
+        --header-spacing:0;
       }
+
       
+      .information {
+        box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
+        background: white;
+        border-radius: 10px;
+        width: 33rem;
+        height: 34.5rem;
+        margin-left: 5px;
+        display: flex;
+        flex-direction:column;
+        justify-content: center;
+        padding-top: 10px;
+      }
+
       .inner_div {
-        
-        overflow:scroll;
-       
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        overflow: scroll;
+        margin-top:5px;
       }
       .inner_div::-webkit-scrollbar {
         width: 0.2rem;
@@ -90,13 +100,21 @@ export class Table extends LitElement {
         flex-direction: row;
         margin-bottom: 6px;
       }
+      .sort_div{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        
+      }
       sl-details {
-        width: 25rem;
+        width: 30rem;
+        margin-bottom:1rem;
         position: sticky;
-      top: 1;
-      z-index: 1;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        padding-bottom:4px;
+        top: 1;
+        z-index: 1;
+      }
+      sl-details::part(base){
+        background-color:var(--sl-color-neutral-100);
       }
       sl-details::part(summary) {
         padding-left: 1rem;
@@ -108,72 +126,35 @@ export class Table extends LitElement {
       sl-details p {
         font-weight: bold;
       }
-      
-      .horizontal{
+
+      .form_pageBtn {
+        position: absolute;
+        top: 2px;
+        left: 10px;
+        z-index: 1;
+      }
+      h3 {
+        text-decoration: underline;
+        color: var(--sl-color-primary-900);
+      }
+      \ p {
+        color: var(--sl-color-primary-900);
+        margin-right: 4px;
+      }
+      #sort_btn{ 
+        padding-bottom:5px;
         display:flex;
-        flex-direction:row;
+        justify-content:flex-end;
+        margin-right:2rem;
       }
-      .side-bar{
-        padding-top:15px;
-        width: 13rem;
-        height: 34.2rem;
-        background:#fff;
-        border-radius:10px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        
-      }
-      .head{
-        display:flex;
-        flex-direction:column;
-        justify-content:center;
-        align-items:center;
-        border-radius:10px;
-        background:#fff;
-        margin-bottom:5px;
-        height:4rem;
-      }
-      .head h1{
-        font-weight:bold;
-        text-decoration:underline;
-        color:var(--sl-color-primary-900);
-      }
-      .tomato-button::part(base) {
-        background-color: var(--sl-color-neutral-0);
-        border: solid 1px tomato;
-        
-      }
-
-      .tomato-button::part(base):hover {
-        background-color: rgba(255, 99, 71, 0.1);
-      }
-
-      .tomato-button::part(base):active {
-        background-color: rgba(255, 99, 71, 0.2);
-      }
-
-      .tomato-button::part(base):focus-visible {
-        box-shadow: 0 0 0 3px rgba(255, 99, 71, 0.33);
-      }
-
-      .tomato-button::part(label) {
-        color: tomato;
-      }
-      .sort_div{
-        margin-top:3rem;
-      }
-      h3{
-        text-decoration:underline;
-        color:var(--sl-color-primary-900);
-      }\
-      p{
-        color:var(--sl-color-primary-900);
-        margin-right:4px;
-      }
-
-     
     `;
+  }
+  showDropdownValues(keyValue,dataOf){
+    for(var i=0;i< dataOf.length;i++){
+      if(dataOf[i].key==keyValue){
+        return dataOf[i].value
+      }
+    }
   }
 
   render() {
@@ -185,12 +166,10 @@ export class Table extends LitElement {
           ${
             this.editData
               ? html` <sl-dialog
-                  
                   id="edit_f"
                   class="modal"
                   style="--width: 40vw;"
                 >
-                  ${console.log("dialog", this.editData)}
 
                   <emp-form
                     isEditing
@@ -199,7 +178,6 @@ export class Table extends LitElement {
                   >
                     <h1>Edit Form</h1>
                   </emp-form>
-                  
                 </sl-dialog>`
               : nothing
           }
@@ -207,28 +185,40 @@ export class Table extends LitElement {
 
         </div>
          
-          <div class="head">
-            <h1>Employee Details</h1>
-          </div>
-          <div class="horizontal">
-          <div class="side-bar" >
-
+          
+            
+          
+          
+          
+          <div class="form_pageBtn"> 
           <sl-button
+                variant="warning"
                 class="tomato-button"
                 @click=${() => (window.location.href = "index.html")}
                 >Registration Form</sl-button
               >
+          </div>     
 
-          <div class="sort_div " >
-            <sl-button variant= "primary"id="srt_btn" @click=${() => {
-              this.sort_func();
-            }}>Sort by Name</sl-button>
-          </div>
+          <div class="sort_div" >
+            
+          
          
 
+          
+          <div class="heading">
+          <h1>Employee Details</h1>
           </div>
 
             <div class="information " >
+          <div id="sort_btn">
+          <sl-button variant= "neutral" id="srt_btn" @click=${() => {
+              this.sort_func();
+            }}>
+            <sl-icon  slot="prefix" name="sort-alpha-down" style="font-size:22px;"></sl-icon>
+            ${this.sort_btn_text}</sl-button>
+          </div>
+            
+
               <div class="inner_div">
 
             ${repeat(
@@ -260,12 +250,12 @@ export class Table extends LitElement {
 
                       <div class="inline">
                         <p>Department:</p>
-                        ${items.value}
+                        ${this.showDropdownValues(items.Department,department)}
                       </div>
 
                       <div class="inline">
                         <p>Designation:</p>
-                        ${items.value}
+                        ${this.showDropdownValues(items.Designation,designation)}
                       </div>
 
                       <div class="inline">
@@ -295,12 +285,12 @@ export class Table extends LitElement {
 
                       <div class="inline">
                         <p>State:</p>
-                        ${items.State}
+                        ${this.showDropdownValues(items.State,state)}
                       </div>
 
                       <div class="inline">
                         <p>Country:</p>
-                        ${items.Country}
+                        ${this.showDropdownValues(items.State,country)}
                       </div>
                     </div>
                     <div id="details_btn">
@@ -347,7 +337,7 @@ export class Table extends LitElement {
     this.editData = undefined;
     window.location.reload();
   }
-  sort_func(){
+  sort_func() {
     this.ascending = !this.ascending;
     const multiplier = this.ascending ? 1 : -1;
     this.data.sort((x, y) => {
@@ -360,6 +350,9 @@ export class Table extends LitElement {
         return 1 * multiplier;
       }
     });
+    if(this.sort_btn_text=="Sort By Name"){
+      this.sort_btn_text="Sorted";
+    }
     this.requestUpdate();
   }
 

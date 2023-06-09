@@ -1,14 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Balinese&display=swap');
 
 *{
   margin: 0;
   padding: 0;
-  font-family: 'Lato', sans-serif;
+  font-family: 'Noto Sans Balinese', sans-serif;
 }
 body {
   margin: 0;
   padding: 0;
-  background-image: url("./background.png");
+  background-color: var(--sl-color-primary-50);
   background-size: cover;
   background-position: center;
 }

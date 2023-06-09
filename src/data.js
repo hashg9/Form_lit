@@ -8,7 +8,6 @@ export const department = [
 
 
 export const designation = [
-    
     {key:"a",value:"Director"},
     {key:"b",value:"Associate-Director"},
     {key:"c",value:"Lead-Engineering"},
@@ -23,11 +22,10 @@ export const designation = [
 ]
 
 export const country=[
-    {country:""},
-    {country:"India"},
-    {country:"America"},
-    {country:"Australia"},
-    {country:"Japan"},
+    {key:"a",value:"India"},
+    {key:"b",value:"America"},
+    {key:"c",value:"Australia"},
+    {key:"d",value:"Japan"},
 ]
 export const state=[
     
