@@ -12,7 +12,7 @@ import "@shoelace-style/shoelace/dist/components/option/option.js";
 import "@shoelace-style/shoelace/dist/components/tooltip/tooltip.js";
 import "@shoelace-style/shoelace/dist/components/progress-ring/progress-ring.js";
 import "@shoelace-style/shoelace/dist/components/icon/icon.js";
-import SlTooltip from "@shoelace-style/shoelace/dist/components/tooltip/tooltip.js";
+
 
 export class Empform extends LitElement {
   static properties = {
@@ -603,7 +603,7 @@ export class Empform extends LitElement {
     } else {
       let alert = this.renderRoot.querySelector("sl-alert");
       alert.variant = "danger";
-      alert.innerHTML = "${<strong>Fill all the fields correctly</strong>}";
+      alert.innerHTML = "Fill all the fields correctly";
       alert.show();
     }
   }
@@ -965,8 +965,9 @@ export class Empform extends LitElement {
                     >
                   </div>
                   <div class="alerts">
-                    <sl-icon slot="icon" name="check2-circle"></sl-icon>
+                    
                       <sl-alert  class="marginbtm margin_top" variant="success" duration="2000" closable>
+                      <sl-icon slot="icon" name="check2-circle"></sl-icon>
                       <strong>Form submitted successfully.</strong>
                     </sl-alert>
                   </div>

@@ -24,11 +24,11 @@ export class Table extends LitElement {
       department: { type: String },
       editmode: { type: Array },
       editData: { type: Object },
-      sort_btn_text:{type: String}
+      sort_btn_text: { type: String },
     };
   }
   constructor() {
-    super(), (this.data = JSON.parse(localStorage.getItem("Form_Data"))||[]);
+    super(), (this.data = JSON.parse(localStorage.getItem("Form_Data")) || []);
     this.emp_data = {};
     this.full_data = {};
 
@@ -52,7 +52,7 @@ export class Table extends LitElement {
     this.on_index = -1;
     this.editmode = [];
     this.editData = undefined;
-    this.sort_btn_text="Sort By Name";
+    this.sort_btn_text = "Sort By Name";
   }
 
   static get styles() {
@@ -61,12 +61,11 @@ export class Table extends LitElement {
         padding: 0;
         margin: 0;
       }
-    
-      sl-dialog::part(base){
-        --header-spacing:0;
+
+      sl-dialog::part(base) {
+        --header-spacing: 0;
       }
 
-      
       .information {
         box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
         background: white;
@@ -75,17 +74,17 @@ export class Table extends LitElement {
         height: 34.5rem;
         margin-left: 5px;
         display: flex;
-        flex-direction:column;
+        flex-direction: column;
         justify-content: center;
         padding-top: 10px;
       }
 
       .inner_div {
-        display:flex;
-        flex-direction:column;
-        align-items:center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         overflow: scroll;
-        margin-top:5px;
+        margin-top: 5px;
       }
       .inner_div::-webkit-scrollbar {
         width: 0.2rem;
@@ -100,21 +99,20 @@ export class Table extends LitElement {
         flex-direction: row;
         margin-bottom: 6px;
       }
-      .sort_div{
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        
+      .sort_div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
       sl-details {
         width: 30rem;
-        margin-bottom:1rem;
+        margin-bottom: 1rem;
         position: sticky;
         top: 1;
         z-index: 1;
       }
-      sl-details::part(base){
-        background-color:var(--sl-color-neutral-100);
+      sl-details::part(base) {
+        background-color: var(--sl-color-neutral-100);
       }
       sl-details::part(summary) {
         padding-left: 1rem;
@@ -141,18 +139,21 @@ export class Table extends LitElement {
         color: var(--sl-color-primary-900);
         margin-right: 4px;
       }
-      #sort_btn{ 
-        padding-bottom:5px;
-        display:flex;
-        justify-content:flex-end;
-        margin-right:2rem;
+      #sort_btn {
+        padding-bottom: 5px;
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 2rem;
+      }
+      #warning_btns{
+        margin-top:10px;
       }
     `;
   }
-  showDropdownValues(keyValue,dataOf){
-    for(var i=0;i< dataOf.length;i++){
-      if(dataOf[i].key==keyValue){
-        return dataOf[i].value
+  showDropdownValues(keyValue, dataOf) {
+    for (var i = 0; i < dataOf.length; i++) {
+      if (dataOf[i].key == keyValue) {
+        return dataOf[i].value;
       }
     }
   }
@@ -170,7 +171,6 @@ export class Table extends LitElement {
                   class="modal"
                   style="--width: 40vw;"
                 >
-
                   <emp-form
                     isEditing
                     .editData=${this.editData}
@@ -212,8 +212,8 @@ export class Table extends LitElement {
             <div class="information " >
           <div id="sort_btn">
           <sl-button variant= "neutral" id="srt_btn" @click=${() => {
-              this.sort_func();
-            }}>
+            this.sort_func();
+          }}>
             <sl-icon  slot="prefix" name="sort-alpha-down" style="font-size:22px;"></sl-icon>
             ${this.sort_btn_text}</sl-button>
           </div>
@@ -250,12 +250,15 @@ export class Table extends LitElement {
 
                       <div class="inline">
                         <p>Department:</p>
-                        ${this.showDropdownValues(items.Department,department)}
+                        ${this.showDropdownValues(items.Department, department)}
                       </div>
 
                       <div class="inline">
                         <p>Designation:</p>
-                        ${this.showDropdownValues(items.Designation,designation)}
+                        ${this.showDropdownValues(
+                          items.Designation,
+                          designation
+                        )}
                       </div>
 
                       <div class="inline">
@@ -285,12 +288,12 @@ export class Table extends LitElement {
 
                       <div class="inline">
                         <p>State:</p>
-                        ${this.showDropdownValues(items.State,state)}
+                        ${this.showDropdownValues(items.State, state)}
                       </div>
 
                       <div class="inline">
                         <p>Country:</p>
-                        ${this.showDropdownValues(items.State,country)}
+                        ${this.showDropdownValues(items.State, country)}
                       </div>
                     </div>
                     <div id="details_btn">
@@ -304,6 +307,16 @@ export class Table extends LitElement {
                         @click=${() => this.delete(index)}
                         >Delete</sl-button
                       >
+                      <div class= "delete_alert">
+                      <sl-alert variant="warning" open>
+                      <sl-icon slot="icon" name="exclamation-triangle"></sl-icon>
+                      <strong>This will permanently delete employee data.</strong><br />
+                      <div id="warning_btns">
+                      <sl-button variant="primary">Continue</sl-button>
+                      <sl-button variant="neutral">Cancel</sl-button>
+                      </div>
+                      </sl-alert>
+                      </div>
                     </div>
                     </div>
                   </sl-details>
@@ -350,8 +363,8 @@ export class Table extends LitElement {
         return 1 * multiplier;
       }
     });
-    if(this.sort_btn_text=="Sort By Name"){
-      this.sort_btn_text="Sorted";
+    if (this.sort_btn_text == "Sort By Name") {
+      this.sort_btn_text = "Sorted";
     }
     this.requestUpdate();
   }
