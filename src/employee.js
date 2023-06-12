@@ -305,6 +305,7 @@ export class Empform extends LitElement {
         }
       },
     };
+    this.editData = undefined;
     
   }
  
