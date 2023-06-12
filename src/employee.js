@@ -30,6 +30,7 @@ export class Empform extends LitElement {
     data: { type: Object },
     progress_value: { type: Number },
     progress_text: { type: String },
+    functions: {type: Object}
   };
 
   constructor() {
@@ -74,9 +75,242 @@ export class Empform extends LitElement {
       sec_phone: "Sec_phone",
     };
     
+    this.functions= {
+       
+      name: (e) => {
+        
+        const name_tooltip = this.renderRoot.querySelector("#name_tooltip");
+        this.save_default_value(e.target.value, "name");
+        if (this.employee.name.value === "" || this.employee.name.value.length >= 40) {
+          this.set_errorMessage(
+            e.target.value,
+            "name",
+            "*Name can have maximum 40 characters"
+          );
+          name_tooltip.show();
+          next_part1.disabled=true;
+        } else {
+          name_tooltip.hide();
+          this.save_true(e.target.value, "name");
+          next_part1.disabled=false;
+        }
+      },
+      state: (e) => {
+        this.save_default_value(e.target.value, "state");
+        if (this.employee.state.value === "") {
+          this.set_errorMessage(e.target.value, "state", "*Choose State");
+        } else {
+          this.save_true(e.target.value, "state");
+        }
+      },
+      line2: (e) => {
+        this.employee = {
+          ...this.employee,
+          line2: {
+            value: `${e.target.value}`,
+            isValidName: true,
+            errorMessage: "",
+          },
+        };
+      },
+      department: (e) => {
+        this.save_default_value(e.target.value, "department");
+        if (this.employee.department.value === "") {
+          this.set_errorMessage(
+            e.target.value,
+            "department",
+            "*Choose Department"
+          );
+        } else {
+          this.save_true(e.target.value, "department");
+        }
+      },
+      designation: (e) => {
+        this.save_default_value(e.target.value, "designation");
+        if (this.employee.designation.value === "") {
+          this.set_errorMessage(
+            e.target.value,
+            "designation",
+            "*Choose Designation"
+          );
+        } else {
+          this.save_true(e.target.value, "designation");
+        }
+      },
+      country: (e) => {
+        this.save_default_value(e.target.value, "country");
+        if (this.employee.country.value === "") {
+          this.set_errorMessage(e.target.value, "country", "*Choose Country");
+        } else {
+          this.save_true(e.target.value, "country");
+        }
+      },
+      per_email: (e) => {
+        const tooltip = this.renderRoot.querySelector("#sec_email_tooltip");
+        this.save_default_value(e.target.value, "per_email");
+        const emailstr = this.employee.per_email.value;
+        const emailpart = emailstr.slice(-10);
+        if (emailstr.includes("@gmail.com") && emailstr.length > 10) {
+          this.save_true(e.target.value, "per_email");
+          tooltip.hide();
+        } else {
+          this.set_errorMessage(
+            e.target.value,
+            "per_email",
+            "*Domain should be (gmail.com)"
+          );
+          tooltip.show();
+        }
+      },
+      line1: (e) => {
+        const line1_tooltip = this.renderRoot.querySelector("#line1_tooltip");
+        this.save_default_value(e.target.value, "line1");
+        if (this.employee.line1.value === "") {
+          this.set_errorMessage(
+            e.target.value,
+            "line1",
+            "*Address line1 cannot be empty"
+          );
+          line1_tooltip.show();
+        } else if (this.employee.line1.value.length > 80) {
+          this.set_errorMessage(
+            e.target.value,
+            "line1",
+            "*Maximum 80 characters allowed"
+          );
+          line1_tooltip.show();
+        } else {
+          this.save_true(e.target.value, "line1");
+          line1_tooltip.hide();
+        }
+      },
+      city: (e) => {
+        const city_tooltip = this.renderRoot.querySelector("#city_tooltip");
+        this.save_default_value(e.target.value, "city");
+        if (
+          this.employee.city.value === "" ||
+          this.employee.city.value.length > 20
+        ) {
+          this.set_errorMessage(
+            e.target.value,
+            "city",
+            "*Cannot have more than 20 characters"
+          );
+          city_tooltip.show();
+        } else {
+          city_tooltip.hide();
+          this.save_true(e.target.value, "city");
+        }
+      },
+      pin: (e) => {
+        const pin_tooltip = this.renderRoot.querySelector("#pin_tooltip");
+        this.save_default_value(e.target.value, "pincode");
+        const pincode = this.employee.pincode.value;
+        const digit = /^\d+$/.test(pincode);
+        if (this.employee.pincode.value.length > 6 || digit === false) {
+          this.set_errorMessage(
+            e.target.value,
+            "pincode",
+            "*Please enter a valid pincode"
+          );
+          pin_tooltip.show();
+        } else {
+          this.save_true(e.target.value, "pincode");
+          pin_tooltip.hide();
+        }
+      },
+      landmark: (e) => {
+        const landmark_tooltip = this.renderRoot.querySelector("#landmark_tooltip");
+        this.save_default_value(e.target.value, "landmark");
+        if (this.employee.landmark.value === "") {
+          this.set_errorMessage(e.target.value, "landmark", "*Mandatory");
+          landmark_tooltip.show();
+        } else {
+          this.save_true(e.target.value, "landmark");
+          landmark_tooltip.hide();
+        }
+      },
+      code: (e) => {
+        const empcode_tooltip = this.renderRoot.querySelector("#empcode_tooltip");
+        this.save_default_value(e.target.value, "emp_code");
+        const codeString = this.employee.emp_code.value;
+        if (codeString.length >= 5) {
+          this.set_errorMessage(
+            e.target.value,
+            "emp_code",
+            "*Can have maximum 4 characters"
+          );
+          empcode_tooltip.show();
+        } else if (codeString.length === 0) {
+          this.set_errorMessage(e.target.value, "emp_code", "*Cannot be empty");
+          empcode_tooltip.show();
+        } else {
+          this.save_true(e.target.value, "emp_code");
+          empcode_tooltip.hide();
+        }
+      },
+      email: (e) => {
+        const email_tooltip = this.renderRoot.querySelector("#email_tooltip");
+        this.save_default_value(e.target.value, "email");
+        const emailstr = this.employee.email.value;
+        const emailpart = emailstr.slice(-13);
+        if (
+          emailstr.includes("@annalect.com") &&
+          emailstr.length > 14 &&
+          emailpart === "@annalect.com"
+        ) {
+          this.save_true(e.target.value, "email");
+          email_tooltip.hide();
+        } else {
+          this.set_errorMessage(
+            e.target.value,
+            "email",
+            "*Domain should be (annalect.com)"
+          );
+          email_tooltip.show();
+        }
+      },
+      phone: (e) => {
+        const tooltip_ph = this.renderRoot.querySelector("#phone_tooltip");
+        this.save_default_value(e.target.value, "phone");
+        const phone = this.employee.phone.value;
+        const digit = /^\d+$/.test(phone);
+        if (this.employee.phone.value.length === 10 && digit === true) {
+          this.save_true(e.target.value, "phone");
+          tooltip_ph.hide();
+        } else {
+          this.set_errorMessage(
+            e.target.value,
+            "phone",
+            "*Must contain 10 digits"
+          );
+          tooltip_ph.show();
+        }
+      },
+      sec_phone: (e) => {
+        const secPh_tooltip = this.renderRoot.querySelector("#secPh_tooltip");
+        this.save_default_value(e.target.value, "sec_phone");
+        const phone = this.employee.sec_phone.value;
+        const digit = /^\d+$/.test(phone);
+        if (this.employee.sec_phone.value.length === 10 && digit === true) {
+          this.save_true(e.target.value, "sec_phone");
+          secPh_tooltip.hide();
+        } else {
+          this.set_errorMessage(
+            e.target.value,
+            "sec_phone",
+            "*Must contain 10 digits"
+          );
+          secPh_tooltip.show();
+        }
+      },
+    };
+    
   }
+ 
 
   firstUpdated() {
+    
     if (this.isEditing) {
       var name = this.renderRoot.querySelector("#f_name");
       var emp_code = this.renderRoot.querySelector("#f_code");
@@ -160,7 +394,7 @@ export class Empform extends LitElement {
       console.log("in submit edit");
       console.log(this.data);
       localStorage.setItem("Form_Data", JSON.stringify(this.data));
-      alert.show();
+      alert.toast();
       setTimeout(() => {
         window.location.reload();
       }, "2000");
@@ -227,297 +461,20 @@ export class Empform extends LitElement {
   }
 
   validate(e, input_type) {
-    switch (input_type) {
-      case "name":
-        {
-          const name_tooltip = this.renderRoot.querySelector("#name_tooltip");
+    
 
-          this.save_default_value(e.target.value, "name");
-          if (
-            this.employee.name.value === "" ||
-            this.employee.name.value.length >= 40
-          ) {
-            this.set_errorMessage(
-              e.target.value,
-              "name",
-              "*Name can have maximum 40 characters"
-            );
-            name_tooltip.show();
-          } else {
-            name_tooltip.hide();
-            this.save_true(e.target.value, "name");
-          }
-        }
-        break;
-
-      case "state":
-        {
-          this.save_default_value(e.target.value, "state");
-
-          if (this.employee.state.value == "") {
-            this.set_errorMessage(e.target.value, "state", "*Choose State");
-          } else {
-            this.save_true(e.target.value, "state");
-          }
-        }
-        break;
-
-      case "line2":
-        {
-          this.employee = {
-            ...this.employee,
-            line2: {
-              value: `${e.target.value}`,
-              isValidName: true,
-              errorMessage: "",
-            },
-          };
-        }
-        break;
-
-      case "department":
-        {
-          this.save_default_value(e.target.value, "department");
-
-          if (this.employee.department.value == "") {
-            this.set_errorMessage(
-              e.target.value,
-              "department",
-              "*Choose Department"
-            );
-          } else {
-            this.save_true(e.target.value, "department");
-          }
-        }
-        break;
-
-      case "designation":
-        {
-          this.save_default_value(e.target.value, "designation");
-
-          if (this.employee.designation.value == "") {
-            this.set_errorMessage(
-              e.target.value,
-              "designation",
-              "*Choose Designation"
-            );
-          } else {
-            this.save_true(e.target.value, "designation");
-          }
-        }
-        break;
-
-      case "country":
-        {
-          this.save_default_value(e.target.value, "country");
-
-          if (this.employee.country.value == "") {
-            this.set_errorMessage(e.target.value, "country", "*Choose Country");
-          } else {
-            this.save_true(e.target.value, "country");
-          }
-        }
-        break;
-
-      case "per_email":
-        {
-          var tooltip = this.renderRoot.querySelector("#sec_email_tooltip");
-          this.save_default_value(e.target.value, "per_email");
-          var emailstr = this.employee.per_email.value;
-          var emailpart = emailstr.slice(-10);
-          if (emailstr.includes("@gmail.com") && emailstr.length > 10) {
-            this.save_true(e.target.value, "per_email");
-            tooltip.hide();
-          } else {
-            this.set_errorMessage(
-              e.target.value,
-              "per_email",
-              "*Domain should be (gmail.com)"
-            );
-            tooltip.show();
-          }
-        }
-        break;
-
-      case "line1":
-        {
-          var line1_tooltip = this.renderRoot.querySelector("#line1_tooltip");
-          this.save_default_value(e.target.value, "line1");
-          if (this.employee.line1.value === "") {
-            this.set_errorMessage(
-              e.target.value,
-              "line1",
-              "*Address line1 cannot be empty"
-            );
-            line1_tooltip.show();
-          } else if (this.employee.line1.value.length > 5) {
-            this.set_errorMessage(
-              e.target.value,
-              "line1",
-              "*Maximun 80 characters allowed"
-            );
-            line1_tooltip.show();
-          } else {
-            this.save_true(e.target.value, "line1");
-            line1_tooltip.hide();
-          }
-        }
-        break;
-
-      case "city":
-        {
-          var city_tooltip = this.renderRoot.querySelector("#city_tooltip");
-          this.save_default_value(e.target.value, "city");
-
-          if (
-            this.employee.city.value == "" ||
-            this.employee.city.value.length > 20
-          ) {
-            this.set_errorMessage(
-              e.target.value,
-              "city",
-              "*Cannot have more than 20 characters"
-            );
-            city_tooltip.show();
-          } else {
-            city_tooltip.hide();
-            this.save_true(e.target.value, "city");
-          }
-        }
-        break;
-
-      case "pin":
-        {
-          var pin_tooltip = this.renderRoot.querySelector("#pin_tooltip");
-          this.save_default_value(e.target.value, "pincode");
-          var pincode = this.employee.pincode.value;
-          var digit = /^\d+$/.test(pincode);
-          if (this.employee.pincode.value.length > 6 || digit === false) {
-            this.set_errorMessage(
-              e.target.value,
-              "pincode",
-              "*Please enter valid pincode"
-            );
-            pin_tooltip.show();
-          } else {
-            this.save_true(e.target.value, "pincode");
-            pin_tooltip.hide();
-          }
-        }
-        break;
-
-      case "landmark":
-        {
-          var landmark_tooltip =
-            this.renderRoot.querySelector("#landmark_tooltip");
-          this.save_default_value(e.target.value, "landmark");
-          if (this.employee.landmark.value === "") {
-            this.set_errorMessage(e.target.value, "landmark", "*Mandatory");
-            landmark_tooltip.show();
-          } else {
-            this.save_true(e.target.value, "landmark");
-            landmark_tooltip.hide();
-          }
-        }
-        break;
-
-      case "code":
-        {
-          var empcode_tooltip =
-            this.renderRoot.querySelector("#empcode_tooltip");
-          this.save_default_value(e.target.value, "emp_code");
-          var codeString = this.employee.emp_code.value;
-          if (codeString.length >= 5) {
-            this.set_errorMessage(
-              e.target.value,
-              "emp_code",
-              "*Can have maximum 4 characters"
-            );
-            empcode_tooltip.show();
-          } else if (codeString.length == 0) {
-            this.set_errorMessage(
-              e.target.value,
-              "emp_code",
-              "*Cannot be empty"
-            );
-            empcode_tooltip.show();
-          } else {
-            this.save_true(e.target.value, "emp_code");
-            empcode_tooltip.hide();
-          }
-        }
-        break;
-
-      case "email":
-        {
-          var email_tooltip = this.renderRoot.querySelector("#email_tooltip");
-          this.save_default_value(e.target.value, "email");
-          var emailstr = this.employee.email.value;
-          var emailpart = emailstr.slice(-13);
-          if (
-            emailstr.includes("@annalect.com") &&
-            emailstr.length > 14 &&
-            emailpart === "@annalect.com"
-          ) {
-            this.save_true(e.target.value, "email");
-            email_tooltip.hide();
-          } else {
-            this.set_errorMessage(
-              e.target.value,
-              "email",
-              "*Domain should be (annalect.com)"
-            );
-            email_tooltip.show();
-          }
-        }
-        break;
-
-      case "phone":
-        {
-          var tooltip_ph = this.renderRoot.querySelector("#phone_tooltip");
-          this.save_default_value(e.target.value, "phone");
-          var phone = this.employee.phone.value;
-          var digit = /^\d+$/.test(phone);
-
-          if (this.employee.phone.value.length == 10 && digit === true) {
-            this.save_true(e.target.value, "phone");
-            tooltip_ph.hide();
-          } else {
-            this.set_errorMessage(
-              e.target.value,
-              "phone",
-              "*Must contain 10 digits"
-            );
-            tooltip_ph.show();
-          }
-        }
-        break;
-
-      case "sec_phone":
-        {
-          var secPh_tooltip = this.renderRoot.querySelector("#secPh_tooltip");
-          this.save_default_value(e.target.value, "sec_phone");
-          var s_phone = this.employee.sec_phone.value;
-          var digit = /^\d+$/.test(s_phone);
-
-          if (this.employee.sec_phone.value.length == 10 && digit === true) {
-            this.save_true(e.target.value, "sec_phone");
-            secPh_tooltip.hide();
-          } else if (this.employee.sec_phone.value == "") {
-            this.save_true(e.target.value, "sec_phone");
-            secPh_tooltip.hide();
-          } else {
-            this.set_errorMessage(
-              e.target.value,
-              "sec_phone",
-              "*Must contain 10 digits"
-            );
-            secPh_tooltip.show();
-          }
-        }
-        break;
+    const required_function = this.functions[input_type];
+    if (required_function) {
+      required_function(e);
     }
   }
+  
+  cancel_edit() {
+    this.editData = undefined;
+    window.location.reload(); 
+  }
+ 
+ 
 
   _submit(e) {
     e.preventDefault();
@@ -571,7 +528,7 @@ export class Empform extends LitElement {
       let alert = this.renderRoot.querySelector("sl-alert");
       alert.variant = "success";
       alert.innerHTML = "Form Submitted Successfully";
-      alert.show();
+      alert.toast();
       setTimeout(() => {
         const form = this.renderRoot.querySelector("form");
         var submit_btn = this.renderRoot.querySelector("#submit_btn");
@@ -652,10 +609,10 @@ export class Empform extends LitElement {
         <div class="form_row">
 
         <div class="input_field margin_right_row"  id="name">
-        <sl-tooltip id="name_tooltip" content="${
+        <sl-tooltip class="input_tooltip" id="name_tooltip" content="${
           this.employee.name.errorMessage
         }" placement="left"  trigger="manual" hoist>
-        <sl-input placeholder="Enter Name" label="Name" size="medium" id="f_name"  style=${
+        <sl-input type="text" placeholder="Enter Name" label="Name" size="medium" id="f_name"  style=${
           this.employee.name?.errorMessage
             ? "--sl-input-focus-ring-color:hsl(0deg 100% 50%)"
             : ""
@@ -666,10 +623,10 @@ export class Empform extends LitElement {
        </div>
 
        <div class="input_field margin_left_row" id="emp_code">
-        <sl-tooltip id="empcode_tooltip" content="${
+        <sl-tooltip class="input_tooltip" id="empcode_tooltip" content="${
           this.employee.emp_code?.errorMessage
         }" placement="right" trigger="manual" hoist>
-        <sl-input placeholder="Enter employee code" label="Employee Code:" size="medium"  id="f_code" style=${
+        <sl-input type="text" placeholder="Enter employee code" label="Employee Code:" size="medium"  id="f_code" style=${
           this.employee.emp_code?.errorMessage
             ? "--sl-input-focus-ring-color:hsl(0deg 100% 50%)"
             : ""
@@ -698,7 +655,7 @@ export class Empform extends LitElement {
           
         <label class="inp_lable">Department:</label>
 
-        <sl-tooltip content="Select Department" placement="right" hoist>
+        <sl-tooltip class="dropdown_tooltip" content="Select Department" placement="right" hoist>
         <sl-select placeholder="Select Department" id="f_dep" size="medium" 
         @click=${(e) => this.decide(e, "department")}>
             ${repeat(
@@ -722,7 +679,7 @@ export class Empform extends LitElement {
       <div class="input_field" id="designation">
       <label class="inp_lable">Designation:</label>
 
-      <sl-tooltip content="Select Designation" placement="right" hoist>
+      <sl-tooltip class="dropdown_tooltip" content="Select Designation" placement="right" hoist>
       <sl-select placeholder="Select Designation" id="f_des" size="medium" 
       @click=${(e) => this.decide(e, "designation")}>                     
             ${repeat(
@@ -755,10 +712,10 @@ export class Empform extends LitElement {
 
        <div class="email marginbtm">
         <div class="input_field" id="email_office">
-        <sl-tooltip id="email_tooltip" content="${
+        <sl-tooltip class="input_tooltip" id="email_tooltip" content="${
           this.employee.email?.errorMessage
         }" trigger="manual" placement="right" hoist>
-        <sl-input placeholder="@annalect.com" label="Office Email:" size="medium" id="f_email" style=${
+        <sl-input type="email" placeholder="@annalect.com" label="Office Email:" size="medium" id="f_email" style=${
           this.employee.email?.errorMessage
             ? "--sl-input-focus-ring-color:hsl(0deg 100% 50%)"
             : ""
@@ -770,10 +727,10 @@ export class Empform extends LitElement {
         
         <div class="second_email marginbtm">
         <div class="input_field" id="email_personal">
-        <sl-tooltip id="sec_email_tooltip" content="${
+        <sl-tooltip class="input_tooltip" id="sec_email_tooltip" content="${
           this.employee.per_email?.errorMessage
         }" trigger="manual" placement="right" hoist>
-        <sl-input placeholder="@gamil.com" label="Personal Email:" size="medium" id="f_peremail" style=${
+        <sl-input type="email" placeholder="@gamil.com" label="Personal Email:" size="medium" id="f_peremail" style=${
           this.employee.per_email?.errorMessage
             ? "--sl-input-focus-ring-color:hsl(0deg 100% 50%)"
             : ""
@@ -784,10 +741,10 @@ export class Empform extends LitElement {
 
         <div class="phone_div marginbtm" >
         <div class="input_field" id="contact">
-        <sl-tooltip id="phone_tooltip" trigger="manual" content="${
+        <sl-tooltip class="input_tooltip" type="tel" id="phone_tooltip" trigger="manual" content="${
           this.employee.phone?.errorMessage
         }" placement="right" hoist>
-        <sl-input placeholder="Enter Phone Number" label="Phone Number:"  size="medium" id="f_phone" style=${
+        <sl-input  placeholder="Enter Phone Number" label="Phone Number:"  size="medium" id="f_phone" style=${
           this.employee.phone?.errorMessage
             ? "--sl-input-focus-ring-color:hsl(0deg 100% 50%)"
             : ""
@@ -799,10 +756,10 @@ export class Empform extends LitElement {
 
         <div class="second_phone marginbtm">    
         <div class="input_field" id="sec_contact">
-        <sl-tooltip id="secPh_tooltip" trigger="manual" content="${
+        <sl-tooltip class="input_tooltip" id="secPh_tooltip" trigger="manual" content="${
           this.employee.sec_phone?.errorMessage
         }" placement="right" hoist>
-        <sl-input placeholder="Enter secondary phone number" label="Secondary Phone Number:"  size="medium" id="f_secph" style=${
+        <sl-input  type="tel" placeholder="Enter secondary phone number" label="Secondary Phone Number:"  size="medium" id="f_secph" style=${
           this.employee.sec_phone?.errorMessage
             ? "--sl-input-focus-ring-color:hsl(0deg 100% 50%)"
             : ""
@@ -840,10 +797,10 @@ export class Empform extends LitElement {
     <div class="form_row">
         
     <div class="input_add margin_right_row" id="line_1">
-    <sl-tooltip id="line1_tooltip" content="${
+    <sl-tooltip class="input_tooltip" id="line1_tooltip" content="${
       this.employee.line1?.errorMessage
     }" placement="left" trigger="manual" hoist>
-    <sl-input placeholder="House no. ,floor" label="Address Line 1:" size="medium"  id="f_line1" style=${
+    <sl-input  type="text" placeholder="House no. ,floor" label="Address Line 1:" size="medium"  id="f_line1" style=${
       this.employee.line1?.errorMessage
         ? "--sl-input-focus-ring-color:hsl(0deg 100% 50%)"
         : ""
@@ -856,7 +813,7 @@ export class Empform extends LitElement {
 
     <div class="input_add margin_left_row" id="line_2">
     
-    <sl-input placeholder="Area, locality (Optional)" label="Address Line 2:" size="medium"  id="f_line2" style=${
+    <sl-input  type="text" placeholder="Area, locality (Optional)" label="Address Line 2:" size="medium"  id="f_line2" style=${
       this.employee.line2?.errorMessage
         ? "--sl-input-focus-ring-color:hsl(0deg 100% 50%)"
         : ""
@@ -871,10 +828,10 @@ export class Empform extends LitElement {
 
     <div class="form_row">
     <div class="input_add" id="city">
-    <sl-tooltip id="city_tooltip" trigger="manual" content="${
+    <sl-tooltip class="input_tooltip" id="city_tooltip" trigger="manual" content="${
       this.employee.city?.errorMessage
     }" placement="left" hoist>
-    <sl-input placeholder="Enter city name" label="City:" size="medium"  id="f_city" style=${
+    <sl-input type="text" placeholder="Enter city name" label="City:" size="medium"  id="f_city" style=${
       this.employee.city?.errorMessage
         ? "--sl-input-focus-ring-color:hsl(0deg 100% 50%)"
         : ""
@@ -886,8 +843,8 @@ export class Empform extends LitElement {
     </div>
 
     <div class="input_add" id="landmark">
-    <sl-tooltip id="landmark_tooltip" trigger="manual" content="Enter Landmark" placement="right" hoist>
-    <sl-input placeholder="Enter Landmark" label="Landmark:" size="medium"  id="f_mark" style=${
+    <sl-tooltip class="input_tooltip" id="landmark_tooltip" trigger="manual" content="Enter Landmark" placement="right" hoist>
+    <sl-input  type="text" placeholder="Enter Landmark" label="Landmark:" size="medium"  id="f_mark" style=${
       this.employee.landmark?.errorMessage
         ? "--sl-input-focus-ring-color:hsl(0deg 100% 50%)"
         : ""
@@ -901,7 +858,7 @@ export class Empform extends LitElement {
 
     <div class="input_add marginbtm"  id="state">
     <label for="state">State:</label>  
-    <sl-tooltip content="Select State" placement="right" hoist>
+    <sl-tooltip class="dropdown_tooltip" content="Select State" placement="right" hoist>
     <sl-select placeholder="Select state" id="f_state" size="medium" @click=${(
       e
     ) => this.decide(e, "state")}>
@@ -911,12 +868,12 @@ export class Empform extends LitElement {
         html` <sl-option value=${items.key}>${items.value} </sl-option> `
     )}
         </sl-tooltip>
-        <span>${this.employee.state?.errorMessage}</span>
+        <span></span>
     </div>
 
     <div class="input_add marginbtm" id="country">
         <label for="country">Country:</label>
-        <sl-tooltip content="Select Country" placement="right" hoist>
+        <sl-tooltip class="dropdown_tooltip" content="Select Country" placement="right" hoist>
         <sl-select placeholder="Select Country" size="medium" id="f_country"  @click=${(
           e
         ) => this.decide(e, "country")}>
@@ -930,10 +887,10 @@ export class Empform extends LitElement {
       </div>
      
     <div class="input_add marginbtm" id="pin" >
-    <sl-tooltip id="pin_tooltip" trigger="manual" content="${
+    <sl-tooltip class="input_tooltip" id="pin_tooltip" trigger="manual" content="${
       this.employee.pincode?.errorMessage
     }" placement="right" hoist>
-    <sl-input placeholder="Enter pincode" label="Pincode:" size="medium" id="f_pincode" style=${
+    <sl-input type="text" placeholder="Enter pincode" label="Pincode:" size="medium" id="f_pincode" style=${
       this.employee.pincode?.errorMessage
         ? "--sl-input-focus-ring-color:hsl(0deg 100% 50%)"
         : ""
@@ -968,7 +925,7 @@ export class Empform extends LitElement {
                     
                       <sl-alert  class="marginbtm margin_top" variant="success" duration="2000" closable>
                       <sl-icon slot="icon" name="check2-circle"></sl-icon>
-                      <strong>Form submitted successfully.</strong>
+                      <strong>Form submitted successfully.</strong><br />
                     </sl-alert>
                   </div>
                 </div>
@@ -1030,13 +987,18 @@ export class Empform extends LitElement {
         color: var(--sl-color-neutral-700);
       }
 
-      sl-tooltip::part(body) {
+      .input_tooltip::part(body) {
         background-color: var(--sl-color-danger-600);
       }
-      sl-tooltip::part(base__arrow) {
+      .input_tooltip::part(base__arrow) {
         background-color: var(--sl-color-danger-600);
       }
-
+      .dropdown_tooltip::part(body){
+        background-color: var(--sl-color-warning-600);
+      }
+      .dropdown_tooltip::part(base__arrow){
+        background-color: var(--sl-color-warning-600);
+      }
       label {
         font-weight: bold;
         color: var(--sl-color-neutral-700);

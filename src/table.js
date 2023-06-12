@@ -65,6 +65,9 @@ export class Table extends LitElement {
       sl-dialog::part(base) {
         --header-spacing: 0;
       }
+      sl-dialog::part(close-button) {
+        color: red;
+      }
 
       .information {
         box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
@@ -85,6 +88,7 @@ export class Table extends LitElement {
         align-items: center;
         overflow: scroll;
         margin-top: 5px;
+        height: 34rem;
       }
       .inner_div::-webkit-scrollbar {
         width: 0.2rem;
@@ -131,6 +135,17 @@ export class Table extends LitElement {
         left: 10px;
         z-index: 1;
       }
+      .center {
+        display: flex;
+        flex-direction: row;
+      }
+      .image {
+        margin-top: 6rem;
+        margin-right: 15px;
+        margin-left: 0;
+        width: 20rem;
+        height: 30rem;
+      }
       h3 {
         text-decoration: underline;
         color: var(--sl-color-primary-900);
@@ -144,18 +159,15 @@ export class Table extends LitElement {
         display: flex;
         justify-content: flex-end;
         margin-right: 2rem;
+        top: 0;
       }
-      #warning_btns{
-        margin-top:10px;
+      #delete_warning {
+        margin-top: 15px;
+      }
+      #warning_btns {
+        margin-top: 10px;
       }
     `;
-  }
-  showDropdownValues(keyValue, dataOf) {
-    for (var i = 0; i < dataOf.length; i++) {
-      if (dataOf[i].key == keyValue) {
-        return dataOf[i].value;
-      }
-    }
   }
 
   render() {
@@ -197,14 +209,15 @@ export class Table extends LitElement {
                 @click=${() => (window.location.href = "index.html")}
                 >Registration Form</sl-button
               >
-          </div>     
+          </div> 
+
+          <div class="center">
+          <div>
+            <img class="image" src="./src/dataImg2.gif" alt="data Image">
+          </div>
 
           <div class="sort_div" >
             
-          
-         
-
-          
           <div class="heading">
           <h1>Employee Details</h1>
           </div>
@@ -226,7 +239,7 @@ export class Table extends LitElement {
               (items, index) =>
                 html`
                   <sl-details summary="Name: ${items.Name}">
-                    <h3>Datailed Info</h3>
+                    <h3>Datailed Information</h3>
                     <div id="info">
                       <div class="inline">
                         <p>Name:</p>
@@ -304,16 +317,17 @@ export class Table extends LitElement {
                       >
                       <sl-button
                         variant="danger"
-                        @click=${() => this.delete(index)}
+                        @click=${() => this.showWarning(index)}
                         >Delete</sl-button
                       >
                       <div class= "delete_alert">
-                      <sl-alert variant="warning" open>
+                      <sl-alert id="delete_warning" variant="warning" closable >
                       <sl-icon slot="icon" name="exclamation-triangle"></sl-icon>
                       <strong>This will permanently delete employee data.</strong><br />
                       <div id="warning_btns">
-                      <sl-button variant="primary">Continue</sl-button>
-                      <sl-button variant="neutral">Cancel</sl-button>
+                      <sl-button  variant="primary" @click=${() =>
+                        this.delete(this.on_index)}>Continue</sl-button>
+                      
                       </div>
                       </sl-alert>
                       </div>
@@ -326,9 +340,25 @@ export class Table extends LitElement {
             </div>
           </div>
             </div>
+          </div>  
         </div>
       </div>
     `;
+  }
+  showWarning(index) {
+    var warningalert = this.renderRoot.querySelector("#delete_warning");
+    warningalert.toast();
+    this.on_index = index;
+    warningalert.addEventListener("sl-hide", () => {
+      window.location.reload();
+    });
+  }
+  showDropdownValues(keyValue, dataOf) {
+    for (var i = 0; i < dataOf.length; i++) {
+      if (dataOf[i].key == keyValue) {
+        return dataOf[i].value;
+      }
+    }
   }
 
   edit(index) {
@@ -345,10 +375,11 @@ export class Table extends LitElement {
     console.log("hi");
     let modal = this.renderRoot.querySelector(".modal");
     modal.show();
+    modal.addEventListener("sl-hide", () => {this.closemodal()} );
   }
   closemodal() {
     this.editData = undefined;
-    window.location.reload();
+    window.location.reload(); 
   }
   sort_func() {
     this.ascending = !this.ascending;
